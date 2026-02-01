@@ -5,6 +5,7 @@ import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([ AllCommunityModule ]);
 import { Container, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 function App() {
   const [users,setUsers] = useState([]);
@@ -17,7 +18,9 @@ function App() {
     aciklama:"",
     isActive:false
   });
-   const handleDelete = async (id) => {
+  const [editId,setEditId] = useState(null);
+
+  const handleDelete = async (id) => {
   try{
     await axios.delete(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${id}`);
     getUsers();
@@ -45,15 +48,27 @@ function App() {
     {
       field: 'id',
       headerName:'İşlemler',
-      width:120,
+      width:220,
       cellRenderer:(params) => {
         return (
+          <Box display="flex" gap={1}>
+          <Button 
+          variant='outlined'
+          color='primary'
+          size='small'
+          startIcon={<EditIcon/>}
+          onClick={()=>handleEdit(params.data)}
+          >
+            Düzenle
+          </Button>
           <Button
           variant='outlined'
           color='error'
           size='small'
+          startIcon={<DeleteIcon />}
           onClick={()=> handleDelete(params.data.id)}
           >Sil</Button>
+          </Box>
         );
       }
     }
@@ -88,18 +103,39 @@ function App() {
 
  };
 
+const handleEdit = (row) => {
+
+  setFormData({
+    isim: row.isim,
+    soyisim: row.soyisim,
+    email: row.email,
+    telefon: row.telefon,
+    aciklama: row.aciklama,
+    isActive: row.isActive
+  });
+
+  setEditId(row.id);
+
+};
+
+const handleCancel = () => {
+  setEditId(null);
+  setFormData({isim:"",soyisim:"",email:"",telefon:"",aciklama:"",isActive:false});
+};
+
+
  const handleSave = async () => {
 
   try{
-    await axios.post("https://697e36ac97386252a26a2c01.mockapi.io/kullanici",formData);
+    if(editId){
+      await axios.put(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${editId}`,formData);
+      alert(`Kullanıcı :${editId} güncellendi`)
+    }else{
+      await axios.post("https://697e36ac97386252a26a2c01.mockapi.io/kullanici",formData);
+      alert("Yeni kullanıcı eklendi :)")
+    }
     getUsers();
-    setFormData({isim:"",
-    soyisim:"",
-    email:"",
-    telefon:"",
-    aciklama:"",
-    isActive:false});
-    alert("Kayıt Başarılıdırr.")
+    handleCancel();
   }
   catch(error){
     console.log("Kayıt oluşturulurken bir hata oluştu.",error);
@@ -111,9 +147,9 @@ function App() {
 return (
 <Container maxWidth="lg" sx={{ marginTop: 4 }}>
       <Typography variant="h4" gutterBottom align="center">
-        Personel Listesi
+        {editId ? "Kayıt Düzenle" : "Personel Listesi"}
       </Typography>
-      <Box sx={{ display: 'flex', gap: 2, marginBottom: 4, flexWrap: 'wrap',backgroundColor:'primary.light' }}>
+      <Box sx={{ display: 'flex', gap: 2, marginBottom: 4, flexWrap: 'wrap',backgroundColor: editId ? '#fff3e0' : '#e3f2fd', padding: 2, borderRadius: 2, border: editId ? '1px solid orange' : 'none' }}>
         <TextField 
           label="İsim" 
           name="isim" 
@@ -158,9 +194,16 @@ return (
             control={<Checkbox checked={formData.isActive} onChange={handleChange} name="isActive" />}
             label="Aktif"
           />
-        <Button variant="contained" color="primary"  onClick={handleSave} >
-          EKLE
+        <Button variant="contained" color={editId ? "warning" : "primary"}  onClick={handleSave} >
+         {editId ? "Güncelle" : "Ekle"} 
         </Button>
+        {
+          editId && (
+            <Button variant='contained' color='inherit' onClick={handleCancel}>
+              Vazgeç
+            </Button>
+          )
+        }
       </Box>
 
 
