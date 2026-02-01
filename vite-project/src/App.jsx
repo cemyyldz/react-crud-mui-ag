@@ -3,9 +3,10 @@ import axios from 'axios'
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([ AllCommunityModule ]);
-import { Container, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import { Container, Typography, Box, Button, TextField, Checkbox, FormControlLabel, InputAdornment } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
 
 function App() {
   const [users,setUsers] = useState([]);
@@ -20,7 +21,10 @@ function App() {
   });
   const [editId,setEditId] = useState(null);
 
+  const [searchTerm,setSearchTerm] = useState("");
+
   const handleDelete = async (id) => {
+    if(window.confirm("Silmek istediğinize emin misiniz ?")){
   try{
     await axios.delete(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${id}`);
     getUsers();
@@ -28,6 +32,7 @@ function App() {
   } catch(error){
     console.log("Silinemedi",error);
     alert("Kayıt Silinemedi");
+  }
   }
  };
 
@@ -72,6 +77,7 @@ function App() {
         );
       }
     }
+
   ];
 
   const getUsers = async () => {
@@ -102,6 +108,10 @@ function App() {
   });
 
  };
+
+ const handleSearchChange = (e) => {
+  setSearchTerm(e.target.value);
+ }
 
 const handleEdit = (row) => {
 
@@ -205,6 +215,32 @@ return (
           )
         }
       </Box>
+      <Box sx={{marginBottom: 2, display: 'flex', justifyContent: 'flex-end'}}>
+        <TextField
+        label="Tabloda ara..."
+        variant='outlined'
+        size='small'
+        value={searchTerm}
+        onChange={handleSearchChange}
+        slotProps={{
+          input:{
+            startAdornment:(
+              <InputAdornment position='start'>
+                <SearchIcon/>
+              </InputAdornment>
+          ),
+        }}}
+        sx={{width: 300,'& .MuiOutlinedInput-root': {
+      color: '#fff',
+      '& fieldset': {
+        borderColor: '#fff',
+      },
+    },
+    '& .MuiInputLabel-root': {
+      color: '#fff',
+    }}}
+        />
+      </Box>
 
 
       <div className="ag-theme-quartz" style={{ height: 500, width: '100%' }}>
@@ -214,6 +250,7 @@ return (
           pagination={true}       
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 20, 50]} 
+          quickFilterText={searchTerm}
         />
       </div>
 
