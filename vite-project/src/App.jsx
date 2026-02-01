@@ -4,20 +4,31 @@ import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([ AllCommunityModule ]);
 import { Container, Typography, Box, Button, TextField, Checkbox, FormControlLabel } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function App() {
   const [users,setUsers] = useState([]);
 
-  const [formData, setFormData]= useState([{
+  const [formData, setFormData]= useState({
     isim:"",
     soyisim:"",
     email:"",
     telefon:"",
     aciklama:"",
     isActive:false
-  }]);
+  });
+   const handleDelete = async (id) => {
+  try{
+    await axios.delete(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${id}`);
+    getUsers();
+    alert("Kayıt Silindi");
+  } catch(error){
+    console.log("Silinemedi",error);
+    alert("Kayıt Silinemedi");
+  }
+ };
 
-  const [columnDefs] = useState([
+  const columnDefs = [
     {field: 'id', headerName:'ID', width:70},
     {field: 'isim', headerName:'İsim', flex:1},
     {field: 'soyisim', headerName:'Soyisim', flex:1},
@@ -29,8 +40,24 @@ function App() {
       width:100,
       cellRenderer:(params) => params.value ? "Aktif" : "Pasif" 
 
+    },
+
+    {
+      field: 'id',
+      headerName:'İşlemler',
+      width:120,
+      cellRenderer:(params) => {
+        return (
+          <Button
+          variant='outlined'
+          color='error'
+          size='small'
+          onClick={()=> handleDelete(params.data.id)}
+          >Sil</Button>
+        );
+      }
     }
-  ]);
+  ];
 
   const getUsers = async () => {
     try{
@@ -65,7 +92,7 @@ function App() {
 
   try{
     await axios.post("https://697e36ac97386252a26a2c01.mockapi.io/kullanici",formData);
-    getUsers;
+    getUsers();
     setFormData({isim:"",
     soyisim:"",
     email:"",
@@ -78,6 +105,8 @@ function App() {
     console.log("Kayıt oluşturulurken bir hata oluştu.",error);
   }
  };
+
+
 
 return (
 <Container maxWidth="lg" sx={{ marginTop: 4 }}>
