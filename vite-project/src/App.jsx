@@ -86,17 +86,19 @@ function App() {
     const response = await axios.get("https://697e36ac97386252a26a2c01.mockapi.io/kullanici");
 
     const formattedData = response.data.map(user =>({
-      ...user,
+      id: user.id,
       name: user.isim,
       surname: user.soyisim,
       phone: user.telefon,
       description: user.aciklama,
+      email: user.email,
+      isActive: user.isActive,
     }));
+    console.log(formattedData);
 
 
     setUsers(formattedData);
 
-    console.log("Başarılı,Veriler : ",formattedData);
     }catch(error){
       console.log("Başarısız Veri okunamadı...",error);
     }
