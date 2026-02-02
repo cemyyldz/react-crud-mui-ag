@@ -12,11 +12,11 @@ function App() {
   const [users,setUsers] = useState([]);
 
   const [formData, setFormData]= useState({
-    isim:"",
-    soyisim:"",
+    name:"",
+    surname:"",
     email:"",
-    telefon:"",
-    aciklama:"",
+    phone:"",
+    description:"",
     isActive:false
   });
   const [editId,setEditId] = useState(null);
@@ -38,11 +38,11 @@ function App() {
 
   const columnDefs = [
     {field: 'id', headerName:'ID', width:70},
-    {field: 'isim', headerName:'İsim', flex:1},
-    {field: 'soyisim', headerName:'Soyisim', flex:1},
+    {field: 'name', headerName:'İsim', flex:1},
+    {field: 'surname', headerName:'Soyisim', flex:1},
     {field: 'email', headerName:'E-mail', flex:1},
-    {field: 'telefon', headerName:'Telefon', flex:1},
-    {field: 'aciklama', headerName:'Açıklama', flex:1},
+    {field: 'phone', headerName:'Telefon', flex:1},
+    {field: 'description', headerName:'Açıklama', flex:1},
     {field: 'isActive',
       headerName:'Üyelik Durumu',
       width:100,
@@ -85,10 +85,18 @@ function App() {
       
     const response = await axios.get("https://697e36ac97386252a26a2c01.mockapi.io/kullanici");
 
+    const formattedData = response.data.map(user =>({
+      ...user,
+      name: user.isim,
+      surname: user.soyisim,
+      phone: user.telefon,
+      description: user.aciklama,
+    }));
 
-    setUsers(response.data);
 
-    console.log("Başarılı,Veriler : ",response.data);
+    setUsers(formattedData);
+
+    console.log("Başarılı,Veriler : ",formattedData);
     }catch(error){
       console.log("Başarısız Veri okunamadı...",error);
     }
@@ -116,11 +124,11 @@ function App() {
 const handleEdit = (row) => {
 
   setFormData({
-    isim: row.isim,
-    soyisim: row.soyisim,
+    name: row.name,
+    surname: row.surname,
     email: row.email,
-    telefon: row.telefon,
-    aciklama: row.aciklama,
+    phone: row.phone,
+    description: row.description,
     isActive: row.isActive
   });
 
@@ -130,18 +138,26 @@ const handleEdit = (row) => {
 
 const handleCancel = () => {
   setEditId(null);
-  setFormData({isim:"",soyisim:"",email:"",telefon:"",aciklama:"",isActive:false});
+  setFormData({name:"",surname:"",email:"",phone:"",description:"",isActive:false});
 };
 
 
  const handleSave = async () => {
+  const apiPayload ={
+    isim: formData.name,
+    soyisim: formData.surname,
+    email: formData.email,
+    telefon: formData.phone,
+    aciklama: formData.description,
+    isActive: formData.isActive,
+  };
 
   try{
     if(editId){
-      await axios.put(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${editId}`,formData);
+      await axios.put(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${editId}`,apiPayload);
       alert(`Kullanıcı :${editId} güncellendi`)
     }else{
-      await axios.post("https://697e36ac97386252a26a2c01.mockapi.io/kullanici",formData);
+      await axios.post("https://697e36ac97386252a26a2c01.mockapi.io/kullanici",apiPayload);
       alert("Yeni kullanıcı eklendi :)")
     }
     getUsers();
@@ -162,18 +178,18 @@ return (
       <Box sx={{ display: 'flex', gap: 2, marginBottom: 4, flexWrap: 'wrap',backgroundColor: editId ? '#fff3e0' : '#e3f2fd', padding: 2, borderRadius: 2, border: editId ? '1px solid orange' : 'none' }}>
         <TextField 
           label="İsim" 
-          name="isim" 
+          name="name" 
           variant="outlined" 
           size="small" 
-          value={formData.isim} 
+          value={formData.name} 
           onChange={handleChange} 
         />
         <TextField 
           label="Soyisim" 
-          name="soyisim" 
+          name="surname" 
           variant="outlined" 
           size="small" 
-          value={formData.soyisim} 
+          value={formData.surname} 
           onChange={handleChange} 
         />
         <TextField 
@@ -186,18 +202,18 @@ return (
         />
         <TextField 
           label="Telefon" 
-          name="telefon" 
+          name="phone" 
           variant="outlined" 
           size="small" 
-          value={formData.telefon} 
+          value={formData.phone} 
           onChange={handleChange} 
         />
         <TextField 
           label="Açıklama" 
-          name="aciklama" 
+          name="description" 
           variant="outlined" 
           size="small" 
-          value={formData.aciklama} 
+          value={formData.description} 
           onChange={handleChange} 
         />
         <FormControlLabel
