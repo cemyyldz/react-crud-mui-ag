@@ -3,10 +3,14 @@ import axios from 'axios'
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([ AllCommunityModule ]);
-import { Container, Typography, Box, Button, TextField, Checkbox, FormControlLabel, InputAdornment } from '@mui/material';
+import { Container, Typography, Box, Button, TextField, Checkbox, FormControlLabel, InputAdornment,Divider,IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
+import Drawer from '@mui/material/Drawer';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 function App() {
   const [users,setUsers] = useState([]);
@@ -34,6 +38,15 @@ function App() {
     alert("Kayıt Silinemedi");
   }
   }
+ };
+ const [open,setOpen] = useState(false);
+
+ const toggleDrawer = async (newOpen) => {
+  setOpen(newOpen);
+  if(!newOpen){
+    handleCancel();
+  }
+
  };
 
   const columnDefs = [
@@ -135,12 +148,14 @@ const handleEdit = (row) => {
   });
 
   setEditId(row.id);
+  setOpen(true);
 
 };
 
 const handleCancel = () => {
   setEditId(null);
   setFormData({name:"",surname:"",email:"",phone:"",description:"",isActive:false});
+  setOpen(false);
 };
 
 
@@ -174,11 +189,68 @@ const handleCancel = () => {
 
 return (
 <Container maxWidth="lg" sx={{ marginTop: 4 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        {editId ? "Kayıt Düzenle" : "Personel Listesi"}
+      
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
+        <Typography variant="h4" >
+        Personel Listesi
       </Typography>
-      <Box sx={{ display: 'flex', gap: 2, marginBottom: 4, flexWrap: 'wrap',backgroundColor: editId ? '#fff3e0' : '#e3f2fd', padding: 2, borderRadius: 2, border: editId ? '1px solid orange' : 'none' }}>
-        <TextField 
+      </Box>
+      <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)} >
+  Kullanıcı Ekle
+</Button>
+      <Box sx={{marginBottom: 2, display: 'flex', justifyContent: 'flex-end'}}>
+        <TextField
+        label="Tabloda ara..."
+        variant='outlined'
+        size='small'
+        value={searchTerm}
+        onChange={handleSearchChange}
+        slotProps={{
+          input:{
+            startAdornment:(
+              <InputAdornment position='start'>
+                <SearchIcon/>
+              </InputAdornment>
+          ),
+        }}}
+        sx={{width: 300,'& .MuiOutlinedInput-root': {
+      color: '#fff',
+      '& fieldset': {
+        borderColor: '#fff',
+      },
+    },
+    '& .MuiInputLabel-root': {
+      color: '#fff',
+    }}}
+        />
+      </Box>
+
+      <div className="ag-theme-quartz" style={{ height: 500, width: '100%' }}>
+        <AgGridReact
+          rowData={users}          
+          columnDefs={columnDefs}  
+          pagination={true}       
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 20, 50]} 
+          quickFilterText={searchTerm}
+        />
+      </div>
+
+
+<Drawer anchor ="right" open={open} onClose={()=>toggleDrawer(false)}>
+  <Box sx={{width:400,padding:3,display:'flex',flexDirection:'column',gap:2}}>
+    <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+      <Typography variant = "h6">
+        {editId? "Kullanıcı Düzenle":"Yeni Kayıt Oluştur"}
+      </Typography>
+      <IconButton onClick={()=>toggleDrawer(false)}>
+        <CloseIcon/>
+      </IconButton>
+    </Box>
+
+    <Divider />
+
+            <TextField 
           label="İsim" 
           name="name" 
           variant="outlined" 
@@ -220,57 +292,27 @@ return (
         />
         <FormControlLabel
             control={<Checkbox checked={formData.isActive} onChange={handleChange} name="isActive" />}
-            label="Aktif"
+            label="Kullanıcı Aktif mi?"
           />
+
+          <Box display="flex" gap={2} mt={2}>
+            
         <Button variant="contained" color={editId ? "warning" : "primary"}  onClick={handleSave} >
          {editId ? "Güncelle" : "Ekle"} 
         </Button>
-        {
-          editId && (
+        
+
             <Button variant='contained' color='inherit' onClick={handleCancel}>
               Vazgeç
             </Button>
-          )
-        }
-      </Box>
-      <Box sx={{marginBottom: 2, display: 'flex', justifyContent: 'flex-end'}}>
-        <TextField
-        label="Tabloda ara..."
-        variant='outlined'
-        size='small'
-        value={searchTerm}
-        onChange={handleSearchChange}
-        slotProps={{
-          input:{
-            startAdornment:(
-              <InputAdornment position='start'>
-                <SearchIcon/>
-              </InputAdornment>
-          ),
-        }}}
-        sx={{width: 300,'& .MuiOutlinedInput-root': {
-      color: '#fff',
-      '& fieldset': {
-        borderColor: '#fff',
-      },
-    },
-    '& .MuiInputLabel-root': {
-      color: '#fff',
-    }}}
-        />
-      </Box>
+          </Box>
 
 
-      <div className="ag-theme-quartz" style={{ height: 500, width: '100%' }}>
-        <AgGridReact
-          rowData={users}          
-          columnDefs={columnDefs}  
-          pagination={true}       
-          paginationPageSize={10}
-          paginationPageSizeSelector={[10, 20, 50]} 
-          quickFilterText={searchTerm}
-        />
-      </div>
+
+
+  </Box>
+</Drawer>
+ 
 
     </Container>
   
