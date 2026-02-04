@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([AllCommunityModule]);
-import { Container, Typography, Box, Button, TextField, Checkbox, FormControlLabel, InputAdornment, Divider, IconButton } from '@mui/material';
+import { Container, Typography, Box, Button, TextField, InputAdornment } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
-import Drawer from '@mui/material/Drawer';
 import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
+
+import { fetchUsers, deleteUserById, createNewUser, updateExistingUser } from './api/userService';
+import UserFormDrawer from './components/UserFormDrawer';
 
 
 function App() {
   const [users, setUsers] = useState([]);
+  const [editId, setEditId] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -23,14 +27,32 @@ function App() {
     description: "",
     isActive: false
   });
-  const [editId, setEditId] = useState(null);
 
-  const [searchTerm, setSearchTerm] = useState("");
+
+  const getUsers = async () => {
+    try {
+
+      const data = await fetchUsers();
+      setUsers(data);
+
+    } catch (error) {
+      console.log("Başarısız Veri okunamadı...", error);
+    }
+
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+
+
+
 
   const handleDelete = async (id) => {
     if (window.confirm("Silmek istediğinize emin misiniz ?")) {
       try {
-        await axios.delete(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${id}`);
+        await deleteUserById(id);
         getUsers();
         alert("Kayıt Silindi");
       } catch (error) {
@@ -39,7 +61,32 @@ function App() {
       }
     }
   };
-  const [open, setOpen] = useState(false);
+  const handleSave = async () => {
+    const apiPayload = {
+      isim: formData.name,
+      soyisim: formData.surname,
+      email: formData.email,
+      telefon: formData.phone,
+      aciklama: formData.description,
+      isActive: formData.isActive,
+    };
+
+    try {
+      if (editId) {
+        await updateExistingUser(editId, apiPayload);
+        alert(`Kullanıcı :${editId} güncellendi`)
+      } else {
+        await createNewUser(apiPayload);
+        alert("Yeni kullanıcı eklendi :)")
+      }
+      getUsers();
+      handleCancel();
+    }
+    catch (error) {
+      console.log("Kayıt oluşturulurken bir hata oluştu.", error);
+    }
+  };
+
 
   const toggleDrawer = async (newOpen) => {
     setOpen(newOpen);
@@ -48,6 +95,47 @@ function App() {
     }
 
   };
+
+
+  const handleCancel = () => {
+    setEditId(null);
+    setFormData({ name: "", surname: "", email: "", phone: "", description: "", isActive: false });
+    setOpen(false);
+  };
+
+  const handleChange = (e) => {
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+    setFormData({
+      ...formData,
+      [e.target.name]: value
+    });
+
+  };
+
+
+  const handleEdit = (row) => {
+
+    setFormData({
+      name: row.name,
+      surname: row.surname,
+      email: row.email,
+      phone: row.phone,
+      description: row.description,
+      isActive: row.isActive
+    });
+
+    setEditId(row.id);
+    setOpen(true);
+
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  }
+
+
+
 
   const columnDefs = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -94,104 +182,11 @@ function App() {
 
   ];
 
-  const getUsers = async () => {
-    try {
-
-      const response = await axios.get("https://697e36ac97386252a26a2c01.mockapi.io/kullanici");
-
-      const formattedData = response.data.map(user => ({
-        id: user.id,
-        name: user.isim,
-        surname: user.soyisim,
-        phone: user.telefon,
-        description: user.aciklama,
-        email: user.email,
-        isActive: user.isActive,
-      }));
-      console.log(formattedData);
-
-
-      setUsers(formattedData);
-
-    } catch (error) {
-      console.log("Başarısız Veri okunamadı...", error);
-    }
-
-  };
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
-    setFormData({
-      ...formData,
-      [e.target.name]: value
-    });
-
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  }
-
-  const handleEdit = (row) => {
-
-    setFormData({
-      name: row.name,
-      surname: row.surname,
-      email: row.email,
-      phone: row.phone,
-      description: row.description,
-      isActive: row.isActive
-    });
-
-    setEditId(row.id);
-    setOpen(true);
-
-  };
-
-  const handleCancel = () => {
-    setEditId(null);
-    setFormData({ name: "", surname: "", email: "", phone: "", description: "", isActive: false });
-    setOpen(false);
-  };
-
-
-  const handleSave = async () => {
-    const apiPayload = {
-      isim: formData.name,
-      soyisim: formData.surname,
-      email: formData.email,
-      telefon: formData.phone,
-      aciklama: formData.description,
-      isActive: formData.isActive,
-    };
-
-    try {
-      if (editId) {
-        await axios.put(`https://697e36ac97386252a26a2c01.mockapi.io/kullanici/${editId}`, apiPayload);
-        alert(`Kullanıcı :${editId} güncellendi`)
-      } else {
-        await axios.post("https://697e36ac97386252a26a2c01.mockapi.io/kullanici", apiPayload);
-        alert("Yeni kullanıcı eklendi :)")
-      }
-      getUsers();
-      handleCancel();
-    }
-    catch (error) {
-      console.log("Kayıt oluşturulurken bir hata oluştu.", error);
-    }
-  };
-
-
 
   return (
     <Container maxWidth sx={{ marginTop: 4 }}>
 
-      <Box display="flex" justifyContent="space-between" backalignItems="center" mb={4}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4" >
           Personel Listesi
         </Typography>
@@ -240,82 +235,14 @@ function App() {
         />
       </div>
 
-
-      <Drawer anchor="right" open={open} onClose={() => toggleDrawer(false)}>
-        <Box sx={{ width: 400, padding: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-            <Typography variant="h6">
-              {editId ? "Kullanıcı Düzenle" : "Yeni Kayıt Oluştur"}
-            </Typography>
-            <IconButton onClick={() => toggleDrawer(false)}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-
-          <Divider />
-
-          <TextField
-            label="İsim"
-            name="name"
-            variant="outlined"
-            size="small"
-            value={formData.name}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Soyisim"
-            name="surname"
-            variant="outlined"
-            size="small"
-            value={formData.surname}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Email"
-            name="email"
-            variant="outlined"
-            size="small"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Telefon"
-            name="phone"
-            variant="outlined"
-            size="small"
-            value={formData.phone}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Açıklama"
-            name="description"
-            variant="outlined"
-            size="small"
-            value={formData.description}
-            onChange={handleChange}
-          />
-          <FormControlLabel
-            control={<Checkbox checked={formData.isActive} onChange={handleChange} name="isActive" />}
-            label="Kullanıcı Aktif mi?"
-          />
-
-          <Box display="flex" gap={2} mt={2}>
-
-            <Button variant="contained" color={editId ? "warning" : "primary"} onClick={handleSave} >
-              {editId ? "Güncelle" : "Ekle"}
-            </Button>
-
-
-            <Button variant='contained' color='inherit' onClick={handleCancel}>
-              Vazgeç
-            </Button>
-          </Box>
-
-
-
-
-        </Box>
-      </Drawer>
+      <UserFormDrawer
+        open={open}
+        onClose={() => toggleDrawer(false)}
+        editId={editId}
+        formData={formData}
+        onChange={handleChange}
+        onSave={handleSave}
+      />
 
 
     </Container>
