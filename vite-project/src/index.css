@@ -1,0 +1,4 @@
+.ag-theme-quartz .ag-cell:focus  {
+  outline: none !important;
+  border: none !important;
+}
