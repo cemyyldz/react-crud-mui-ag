@@ -1,15 +1,12 @@
-import { useState } from "react";
+import { useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const { isAuthenticated } = useAuth();
 
-  return isLoggedIn ? (
-    <Dashboard onLogout={() => setIsLoggedIn(false)} />
-  ) : (
-    <Login onLogin={() => setIsLoggedIn(true)} />
-  );
+
+return isAuthenticated ? <Dashboard/> : <Login/>
 }
 
 export default App;

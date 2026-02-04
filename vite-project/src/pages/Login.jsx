@@ -1,10 +1,10 @@
 import LoginLayout from "../components/login/LoginLayout";
 import LoginForm from "../components/login/LoginForm";
 
-function Login({ onLogin }) {
+function Login() {
   return (
     <LoginLayout>
-      <LoginForm onLogin={onLogin} />
+      <LoginForm />
     </LoginLayout>
   );
 }

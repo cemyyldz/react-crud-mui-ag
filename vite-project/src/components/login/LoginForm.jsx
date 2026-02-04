@@ -1,9 +1,22 @@
-import { TextField, Button, Typography, Box, Divider } from "@mui/material";
+import { useState } from "react";
+import { TextField, Button, Typography, Box, Divider, Alert } from "@mui/material";
+import { useAuth } from "../../context/AuthContext";
 
-function LoginForm({ onLogin }) {
+function LoginForm() {
+  const {login}=useAuth();
 
-  const handleSubmit = () => {
-    onLogin();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async () => {
+    setError(null);
+
+    const result = await login(username, password);
+
+    if(!result.success){
+      setError(result.message);
+    }
   };
 
   return (
@@ -19,10 +32,14 @@ function LoginForm({ onLogin }) {
 
       <Divider />
 
+      {error && <Alert severity="error">{error}</Alert>}
+
       <TextField
         label="Kullanıcı Adı"
         fullWidth
         size="small"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
 
       <TextField
@@ -30,6 +47,8 @@ function LoginForm({ onLogin }) {
         type="password"
         fullWidth
         size="small"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
 
       <Button

@@ -1,3 +1,4 @@
+import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
@@ -11,8 +12,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { fetchUsers, deleteUserById, createNewUser, updateExistingUser } from '../api/userService';
 import UserFormDrawer from '../components/UserFormDrawer';
 
-function Dashboard({ onLogout }) {
-
+function Dashboard() {
+  const { logout, user } = useAuth();
   const [users, setUsers] = useState([]);
   const [editId, setEditId] = useState(null);
   const [open, setOpen] = useState(false);
@@ -193,13 +194,13 @@ function Dashboard({ onLogout }) {
     <Container maxWidth sx={{ marginTop: 4 }}>
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Typography variant="h4" >
-          Personel Listesi
+        <Typography variant="h4">
+           Personel Listesi {user ? `(${user.name})` : ""}
         </Typography>
         <Button
           variant="outlined"
           color="error"
-          onClick={onLogout}
+          onClick={logout}
         >
           Çıkış Yap
         </Button>
