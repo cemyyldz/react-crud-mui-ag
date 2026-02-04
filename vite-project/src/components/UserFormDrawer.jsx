@@ -19,6 +19,8 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
 
         <TextField label="İsim" name="name" variant="outlined" size="small" value={formData.name} onChange={onChange} />
         <TextField label="Soyisim" name="surname" variant="outlined" size="small" value={formData.surname} onChange={onChange} />
+        <TextField label="Kullanıcı Adı" name="username" variant="outlined" size="small" value={formData.username} onChange={onChange} />
+        <TextField label="Şifre" name="password" variant="outlined" size="small" value={formData.password} onChange={onChange} />
         <TextField label="Email" name="email" variant="outlined" size="small" value={formData.email} onChange={onChange} />
         <TextField label="Telefon" name="phone" variant="outlined" size="small" value={formData.phone} onChange={onChange} />
         <TextField label="Açıklama" name="description" variant="outlined" size="small" value={formData.description} onChange={onChange} />

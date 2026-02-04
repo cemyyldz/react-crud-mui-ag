@@ -12,6 +12,8 @@ export const fetchUsers = async () => {
         description: user.aciklama,
         email: user.email,
         isActive: user.isActive,
+        username: user.username,
+        password: user.password,
   }));
 };
 

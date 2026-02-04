@@ -22,6 +22,8 @@ function App() {
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
+    username:"",
+    password:"",
     email: "",
     phone: "",
     description: "",
@@ -65,6 +67,8 @@ function App() {
     const apiPayload = {
       isim: formData.name,
       soyisim: formData.surname,
+      username: formData.username,
+      password: formData.password,
       email: formData.email,
       telefon: formData.phone,
       aciklama: formData.description,
@@ -99,7 +103,7 @@ function App() {
 
   const handleCancel = () => {
     setEditId(null);
-    setFormData({ name: "", surname: "", email: "", phone: "", description: "", isActive: false });
+    setFormData({ name: "", surname: "",username: "",password: "", email: "", phone: "", description: "", isActive: false });
     setOpen(false);
   };
 
@@ -119,6 +123,8 @@ function App() {
     setFormData({
       name: row.name,
       surname: row.surname,
+      username: row.username,
+      password: row.password,
       email: row.email,
       phone: row.phone,
       description: row.description,
