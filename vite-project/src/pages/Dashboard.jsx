@@ -1,4 +1,3 @@
-import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
@@ -13,7 +12,6 @@ import { fetchUsers, deleteUserById, createNewUser, updateExistingUser } from '.
 import UserFormDrawer from '../components/UserFormDrawer';
 
 function Dashboard() {
-  const { logout, user } = useAuth();
   const [users, setUsers] = useState([]);
   const [editId, setEditId] = useState(null);
   const [open, setOpen] = useState(false);
@@ -191,19 +189,12 @@ function Dashboard() {
 
 
   return (
-    <Container maxWidth sx={{ marginTop: 4 }}>
+    <Container maxWidth="xl" sx={{ marginTop: 4 }}>
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">
-           Personel Listesi {user ? `(${user.name})` : ""}
+           Personel Listesi
         </Typography>
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={logout}
-        >
-          Çıkış Yap
-        </Button>
       </Box>
       <Box sx={{ marginBottom: 2, display: 'flex', justifyContent: 'space-between' }}>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)} >
