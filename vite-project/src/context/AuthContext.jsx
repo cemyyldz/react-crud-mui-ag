@@ -1,56 +1,78 @@
 import { createContext, useState, useContext } from "react";
 import { fetchUsers } from "../api/userService";
+//import { loginUserApi } from "../api/userService";
 
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = async (username,password) => {
-    try{
+  const login = async (username, password) => {
+
+    try {
       const users = await fetchUsers();
+      const foundUser = users.find(
+        (u) => u.username === username && u.password === password
+      );
 
-    const foundUser = users.find(
-      (u) => u.username === username && u.password === password
-    );
+      if (foundUser) {
+        setUser(foundUser);
+        return { success: true }
+      }
+      else {
+        return { success: false, message: "Kullanıcı adı veya şifre hatalı!" };
+      }
+    } catch (error) {
 
-    if(foundUser){
-      setUser(foundUser);
-      return { success : true}
-    }
-    else {
-      return { success : false,message:"Kullanıcı adı veya şifre hatalı!"};
-    }
+      console.log("Giriş hatası", error);
 
-
-
-
-
-    }catch(error){
-      console.log("Giriş hatası",error);
-      return{success: false,message: "Sunucu hatası"};
+      return { success: false, message: "Sunucu hatası" };
 
     }
 
-
-
-    };
-    const logout = () => {
-      setUser(null);
-
-    };
-
-    const values = {
-      user,
-      isAuthenticated: !!user,
-      login,
-      logout,
-    };
-
-    return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
-    
   };
 
-  export const useAuth = () => useContext(AuthContext);
+  /* const login = async (username,password) => {
+    try{
+      const payload = {username,password};
+
+      const response = await loginUserApi(payload);
+
+    if(response){
+      setUser(response);
+      return { success : true}
+    }
+    
+    }catch(error){
+      console.log("Giriş hatası",error);
+      if (error.response && error.response.status === 401) {
+          return { success: false, message: "Kullanıcı adı veya şifre hatalı!" };
+      }
+      if (error.response && error.response.status === 404) {
+          return { success: false, message: "Böyle bir kullanıcı bulunamadı (API Endpoint Yok)!" };
+      }
+      
+      return { success: false, message: "Sunucu hatası!" };
+    }
+
+    };*/
+
+  const logout = () => {
+    setUser(null);
+
+  };
+
+  const values = {
+    user,
+    isAuthenticated: !!user,
+    login,
+    logout,
+  };
+
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+
+};
+
+export const useAuth = () => useContext(AuthContext);
 

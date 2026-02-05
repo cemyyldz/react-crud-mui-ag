@@ -28,3 +28,12 @@ export const createNewUser = async (payload) => {
 export const updateExistingUser = async (id, payload) => {
     return await axios.put(`${API_URL}/${id}`, payload);
 };
+
+/*}
+export const loginUserApi = async(credentials) => {
+  const response = await axios.post(`${API_URL}/login`,credentials);
+  return response.data;
+
+};
+
+*/
