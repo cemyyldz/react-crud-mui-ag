@@ -6,10 +6,9 @@ import UserDetail from "./pages/UserDetail";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 function App() {
   const { isAuthenticated } = useAuth();
-  const ProctectedRoute = ({ children }) => {
+  const ProtectedRoute = ({ children }) => {
     if (!isAuthenticated) {
       return <Navigate to="/" replace />;
-
     }
     return children;
   }
@@ -24,17 +23,17 @@ function App() {
         <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
 
         <Route path="/dashboard" element={
-          <ProctectedRoute>
+          <ProtectedRoute>
             <Dashboard />
-          </ProctectedRoute>
+          </ProtectedRoute>
         }
         />
 
 
         <Route path="/user/:id" element={
-          <ProctectedRoute>
+          <ProtectedRoute>
             <UserDetail />
-          </ProctectedRoute>
+          </ProtectedRoute>
         }
         />
 

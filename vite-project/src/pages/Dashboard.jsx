@@ -185,9 +185,9 @@ function Dashboard() {
               size='small'
               startIcon={!isMobile ? <EditIcon /> : null}
               onClick={() => handleEdit(params.data)}
-              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px',aspectRatio: isMobile ? '1/1' : 'auto' }}
+              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px', aspectRatio: isMobile ? '1/1' : 'auto' }}
             >
-              {isMobile ? <EditIcon fontSize='small'/> : 'Düzenle'}
+              {isMobile ? <EditIcon fontSize='small' /> : 'Düzenle'}
             </Button>
             <Button
               variant='outlined'
@@ -195,8 +195,8 @@ function Dashboard() {
               size='small'
               startIcon={!isMobile ? <DeleteIcon /> : null}
               onClick={() => handleDelete(params.data.id)}
-              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px' ,aspectRatio: isMobile ? '1/1' : 'auto'}}
-            >{isMobile ? <DeleteIcon fontSize='small'/> : 'Sil'}</Button>
+              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px', aspectRatio: isMobile ? '1/1' : 'auto' }}
+            >{isMobile ? <DeleteIcon fontSize='small' /> : 'Sil'}</Button>
           </Box>
         );
       }
@@ -256,6 +256,9 @@ function Dashboard() {
           quickFilterText={searchTerm}
           domLayout="autoHeight"
           onRowClicked={(event) => {
+            if (event.event.target.closest("button")) {
+              return;
+            }
             navigate(`/user/${event.data.id}`);
           }}
           rowStyle={{ cursor: 'pointer' }}
