@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { fetchUsers, deleteUserById, createNewUser, updateExistingUser } from '../api/userService';
 import UserFormDrawer from '../components/UserFormDrawer';
 import '../index.css'
+import { useNavigate } from "react-router-dom";
 
 
 function Dashboard() {
@@ -23,6 +24,7 @@ function Dashboard() {
   const [editId, setEditId] = useState(null);
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
 
   const [formData, setFormData] = useState({
@@ -253,6 +255,10 @@ function Dashboard() {
           paginationPageSizeSelector={[10, 20, 50]}
           quickFilterText={searchTerm}
           domLayout="autoHeight"
+          onRowClicked={(event) => {
+            navigate(`/user/${event.data.id}`);
+          }}
+          rowStyle={{ cursor: 'pointer' }}
         />
       </div>
 
