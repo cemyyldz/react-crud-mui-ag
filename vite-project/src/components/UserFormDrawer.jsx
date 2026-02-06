@@ -4,8 +4,25 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) => {
   return (
-    <Drawer anchor="right" open={open} onClose={onClose}>
-      <Box sx={{ width: 400, padding: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Drawer anchor="right" open={open} onClose={onClose}
+      PaperProps={{
+        sx: {
+          width: { xs: "100%", sm: 400 },
+          maxWidth: "100%",
+          height: { xs: "100vh", sm: "100%" },
+        },
+      }}
+
+    >
+
+      <Box sx={{
+        p: { xs: 2, sm: 3 },
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        height: "100%",
+        overflowY: "auto",
+      }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Typography variant="h6">
             {editId ? "Kullanıcı Düzenle" : "Yeni Kayıt Oluştur"}
@@ -24,17 +41,17 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         <TextField label="Email" name="email" variant="outlined" size="small" value={formData.email} onChange={onChange} />
         <TextField label="Telefon" name="phone" variant="outlined" size="small" value={formData.phone} onChange={onChange} />
         <TextField label="Açıklama" name="description" variant="outlined" size="small" value={formData.description} onChange={onChange} />
-        
+
         <FormControlLabel
           control={<Checkbox checked={formData.isActive} onChange={onChange} name="isActive" />}
           label="Kullanıcı Aktif mi?"
         />
 
-        <Box display="flex" gap={2} mt={2}>
-          <Button variant="contained" color={editId ? "warning" : "primary"} onClick={onSave}>
+        <Box display="flex" gap={2} mt={2} flexDirection={{ xs: "column", sm: "row" }}>
+          <Button variant="contained" color={editId ? "warning" : "primary"} onClick={onSave} fullWidth>
             {editId ? "Güncelle" : "Ekle"}
           </Button>
-          <Button variant='contained' color='inherit' onClick={onClose}>
+          <Button variant='contained' color='inherit' onClick={onClose} fullWidth>
             Vazgeç
           </Button>
         </Box>

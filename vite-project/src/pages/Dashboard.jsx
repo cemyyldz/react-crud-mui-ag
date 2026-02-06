@@ -2,7 +2,10 @@ import { useState, useEffect } from 'react'
 import { AgGridReact } from 'ag-grid-react';
 import { ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 ModuleRegistry.registerModules([AllCommunityModule]);
-import { Container, Typography, Box, Button, TextField, InputAdornment } from '@mui/material';
+import {
+  Container, Typography, Box, Button, TextField, InputAdornment, useTheme,
+  useMediaQuery
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
@@ -10,8 +13,12 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { fetchUsers, deleteUserById, createNewUser, updateExistingUser } from '../api/userService';
 import UserFormDrawer from '../components/UserFormDrawer';
+import '../index.css'
+
 
 function Dashboard() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [users, setUsers] = useState([]);
   const [editId, setEditId] = useState(null);
   const [open, setOpen] = useState(false);
@@ -143,16 +150,19 @@ function Dashboard() {
 
 
   const columnDefs = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'İsim', flex: 1 },
-    { field: 'surname', headerName: 'Soyisim', flex: 1 },
-    { field: 'email', headerName: 'E-mail', flex: 1 },
-    { field: 'phone', headerName: 'Telefon', flex: 1 },
-    { field: 'description', headerName: 'Açıklama', flex: 1 },
+    { field: 'id', headerName: 'ID', minWidth: 70, hide: isMobile, flex: isMobile ? undefined : 0.5 },
+    { field: 'name', headerName: 'İsim', minWidth: 120, width: isMobile ? 120 : undefined, flex: isMobile ? undefined : 1 },
+    { field: 'surname', headerName: 'Soyisim', minWidth: 120, width: isMobile ? 120 : undefined, flex: isMobile ? undefined : 1 },
+    { field: 'email', headerName: 'E-mail', minWidth: 220, hide: isMobile, flex: isMobile ? undefined : 1.5 },
+    { field: 'phone', headerName: 'Telefon', minWidth: 150, hide: isMobile, flex: isMobile ? undefined : 1 },
+    { field: 'description', headerName: 'Açıklama', minWidth: 150, hide: isMobile, flex: isMobile ? undefined : 1.5 },
     {
       field: 'isActive',
       headerName: 'Üyelik Durumu',
-      width: 100,
+      minWidth: 120,
+      width: isMobile ? 120 : undefined,
+      flex: isMobile ? undefined : 1,
+
       cellRenderer: (params) => params.value ? "Aktif" : "Pasif"
 
     },
@@ -160,7 +170,10 @@ function Dashboard() {
     {
       field: 'id',
       headerName: 'İşlemler',
-      width: 220,
+      minWidth: isMobile ? 140 : 200,
+      width: isMobile ? 140 : undefined,
+      flex: isMobile ? undefined : 1,
+
       cellRenderer: (params) => {
         return (
           <Box display="flex" gap={1}>
@@ -168,18 +181,20 @@ function Dashboard() {
               variant='outlined'
               color='primary'
               size='small'
-              startIcon={<EditIcon />}
+              startIcon={!isMobile ? <EditIcon /> : null}
               onClick={() => handleEdit(params.data)}
+              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px',aspectRatio: isMobile ? '1/1' : 'auto' }}
             >
-              Düzenle
+              {isMobile ? <EditIcon fontSize='small'/> : 'Düzenle'}
             </Button>
             <Button
               variant='outlined'
               color='error'
               size='small'
-              startIcon={<DeleteIcon />}
+              startIcon={!isMobile ? <DeleteIcon /> : null}
               onClick={() => handleDelete(params.data.id)}
-            >Sil</Button>
+              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px' ,aspectRatio: isMobile ? '1/1' : 'auto'}}
+            >{isMobile ? <DeleteIcon fontSize='small'/> : 'Sil'}</Button>
           </Box>
         );
       }
@@ -193,11 +208,19 @@ function Dashboard() {
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4">
-           Personel Listesi
+          Personel Listesi
         </Typography>
       </Box>
-      <Box sx={{ marginBottom: 2, display: 'flex', justifyContent: 'space-between' }}>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)} >
+      <Box sx={{
+        mb: 2,
+        display: "flex",
+        flexDirection: { xs: "column", sm: "row" },
+        gap: 2,
+        alignItems: { sm: "center" },
+        justifyContent: { sm: "space-between" },
+      }}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)}
+          sx={{ width: { xs: "100%", sm: "auto" } }}>
           Kullanıcı Ekle
         </Button>
         <TextField
@@ -216,20 +239,12 @@ function Dashboard() {
             }
           }}
           sx={{
-            width: 300, '& .MuiOutlinedInput-root': {
-              color: '#dca2a2',
-              '& fieldset': {
-                borderColor: '#f02929',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: '#fff',
-            }
+            width: { xs: "100%", sm: 300 }
           }}
         />
       </Box>
 
-      <div className="ag-theme-quartz" style={{ height: 500, width: '100%' }}>
+      <div className="ag-theme-quartz" style={{ height: 500, width: '100%', overflowX: 'auto' }} >
         <AgGridReact
           rowData={users}
           columnDefs={columnDefs}
@@ -237,6 +252,7 @@ function Dashboard() {
           paginationPageSize={10}
           paginationPageSizeSelector={[10, 20, 50]}
           quickFilterText={searchTerm}
+          domLayout="autoHeight"
         />
       </div>
 
@@ -245,6 +261,7 @@ function Dashboard() {
         onClose={() => toggleDrawer(false)}
         editId={editId}
         formData={formData}
+
         onChange={handleChange}
         onSave={handleSave}
       />
