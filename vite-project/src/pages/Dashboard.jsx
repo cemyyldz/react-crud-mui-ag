@@ -15,6 +15,10 @@ import { fetchUsers, deleteUserById, createNewUser, updateExistingUser } from '.
 import UserFormDrawer from '../components/UserFormDrawer';
 import '../index.css'
 import { useNavigate } from "react-router-dom";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import WarningIcon from '@mui/icons-material/Warning';
+import { toast } from 'react-toastify';
+
 
 
 function Dashboard() {
@@ -25,6 +29,8 @@ function Dashboard() {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [idToDelete, setIdToDelete] = useState(null);
 
 
   const [formData, setFormData] = useState({
@@ -55,22 +61,28 @@ function Dashboard() {
     getUsers();
   }, []);
 
+  const handleDeleteClick = (id) => {
+    setIdToDelete(id);      
+    setOpenDeleteDialog(true);
+  };
 
+  const confirmDelete = async () => {
+    if (!idToDelete) return;
 
+    try {
+      await deleteUserById(idToDelete); 
+      toast.success("Kullanıcı başarıyla silindi!");
+      getUsers();
 
-
-  const handleDelete = async (id) => {
-    if (window.confirm("Silmek istediğinize emin misiniz ?")) {
-      try {
-        await deleteUserById(id);
-        getUsers();
-        alert("Kayıt Silindi");
-      } catch (error) {
-        console.log("Silinemedi", error);
-        alert("Kayıt Silinemedi");
-      }
+    } catch (error) {
+      console.log("Silinemedi", error);
+      toast.error("Silme işlemi başarısız oldu!");
+    } finally {
+      setOpenDeleteDialog(false);
+      setIdToDelete(null);
     }
   };
+
   const handleSave = async () => {
     const apiPayload = {
       isim: formData.name,
@@ -194,7 +206,7 @@ function Dashboard() {
               color='error'
               size='small'
               startIcon={!isMobile ? <DeleteIcon /> : null}
-              onClick={() => handleDelete(params.data.id)}
+              onClick={() => handleDeleteClick(params.data.id)}
               sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px', aspectRatio: isMobile ? '1/1' : 'auto' }}
             >{isMobile ? <DeleteIcon fontSize='small' /> : 'Sil'}</Button>
           </Box>
@@ -274,6 +286,30 @@ function Dashboard() {
         onChange={handleChange}
         onSave={handleSave}
       />
+
+      <Dialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+      >
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <WarningIcon color="warning" />
+          Silme İşlemi
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bu kullanıcıyı silmek istediğinize emin misiniz? <br />
+            Bu işlem geri alınamaz.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDeleteDialog(false)} color="inherit">
+            Vazgeç
+          </Button>
+          <Button onClick={confirmDelete} color="error" variant="contained" autoFocus>
+            Evet, Sil
+          </Button>
+        </DialogActions>
+      </Dialog>
 
 
     </Container>

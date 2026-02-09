@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Navbar from "./components/Navbar";
 import UserDetail from "./pages/UserDetail";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
 function App() {
   const { isAuthenticated } = useAuth();
   const ProtectedRoute = ({ children }) => {
@@ -38,6 +39,12 @@ function App() {
         />
 
       </Routes>
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000} 
+        hideProgressBar={false}
+        theme="colored"
+      />
 
 
     </BrowserRouter>

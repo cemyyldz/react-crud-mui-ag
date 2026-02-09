@@ -11,51 +11,51 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [errors,setErrors] = useState({});
+  const [errors, setErrors] = useState({});
 
   const validateForm = () => {
     const newErrors = {};
 
-    if(!formData.name?.trim()){
-      newErrors.name="İsim alanı boş bırakılamaz.";
+    if (!formData.name?.trim()) {
+      newErrors.name = "İsim alanı boş bırakılamaz.";
     }
 
-    if(!formData.surname?.trim()){
-      newErrors.surname="Soyisim alanı boş bırakılamaz.";
+    if (!formData.surname?.trim()) {
+      newErrors.surname = "Soyisim alanı boş bırakılamaz.";
     }
 
-    if(!formData.username?.trim()){
-      newErrors.username="Kullanıcı adı zorunludur.";
+    if (!formData.username?.trim()) {
+      newErrors.username = "Kullanıcı adı zorunludur.";
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if(!formData.email?.trim()){
-      newErrors.email="Email alanı boş bırakılamaz.";
-    }else if (!emailRegex.test(formData.email)){
-      newErrors.email="Lütfen geçerli bir email adresi giriniz.";
+    if (!formData.email?.trim()) {
+      newErrors.email = "Email alanı boş bırakılamaz.";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Lütfen geçerli bir email adresi giriniz.";
     }
-    if(!formData.description?.trim()){
-      newErrors.description="Açıklama zorunludur.";
+    if (!formData.description?.trim()) {
+      newErrors.description = "Açıklama zorunludur.";
     }
 
-    const phoneRegex =/^(0)?5\d{9}$/;
-    if(!formData.phone?.trim()){
-      newErrors.phone="Telefon numarası zorunludur.";
-    }else if(!phoneRegex.test(formData.phone)){
+    const phoneRegex = /^(0)?5\d{9}$/;
+    if (!formData.phone?.trim()) {
+      newErrors.phone = "Telefon numarası zorunludur.";
+    } else if (!phoneRegex.test(formData.phone)) {
       newErrors.phone = "Geçerli bir telefon numarası giriniz."
     }
 
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).+$/;
 
-    if(!editId && !formData.password?.trim()){
-      newErrors.password="Şifre giriniz";
+    if (!editId && !formData.password?.trim()) {
+      newErrors.password = "Şifre giriniz";
     }
-    else if (!editId && !passwordRegex.test(formData.password)){
-      newErrors.password="En az bir harf ve bir rakam içermelidir.";
+    else if (formData.password?.trim() && !passwordRegex.test(formData.password)) {
+      newErrors.password = "En az bir harf ve bir rakam içermelidir.";
     }
 
     setErrors(newErrors);
@@ -68,9 +68,9 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
   const handleSubmit = async () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
-    
+
     try {
-      await onSave(); 
+      await onSave();
       setErrors({});
     } catch (error) {
       console.error("Hata:", error);
@@ -83,8 +83,8 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
     onChange(e);
 
     if (errors[e.target.name]) {
-          setErrors({ ...errors, [e.target.name]: null });
-      }
+      setErrors({ ...errors, [e.target.name]: null });
+    }
   };
 
 
@@ -120,19 +120,21 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
 
         <Divider />
 
-        <TextField label="İsim" name="name" variant="outlined" size="small" value={formData.name} onChange={handleInputChange} 
-            error={!!errors.name} helperText={errors.name} />
-        <TextField label="Soyisim" name="surname" variant="outlined" size="small" value={formData.surname} onChange={handleInputChange} 
-            error={!!errors.surname} helperText={errors.surname} />
-        <TextField label="Kullanıcı Adı" name="username" variant="outlined" size="small" value={formData.username} onChange={onChange} />
+        <TextField label="İsim" name="name" variant="outlined" size="small" value={formData.name} onChange={handleInputChange}
+          error={!!errors.name} helperText={errors.name} />
+        <TextField label="Soyisim" name="surname" variant="outlined" size="small" value={formData.surname} onChange={handleInputChange}
+          error={!!errors.surname} helperText={errors.surname} />
+        <TextField label="Kullanıcı Adı" name="username" variant="outlined" size="small" value={formData.username} onChange={handleInputChange}
+          error={!!errors.username}
+          helperText={errors.username} />
         <TextField
           label="Şifre"
           name="password"
           variant="outlined"
           size="small"
           value={formData.password}
-          onChange={handleInputChange} 
-            error={!!errors.password} helperText={errors.password}
+          onChange={handleInputChange}
+          error={!!errors.password} helperText={errors.password}
           type={showPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
@@ -149,12 +151,12 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
             ),
           }}
         />
-        <TextField label="Email" name="email" variant="outlined" size="small" value={formData.email} onChange={handleInputChange} 
-            error={!!errors.email} helperText={errors.email} />
-        <TextField label="Telefon" name="phone" variant="outlined" size="small" value={formData.phone} onChange={handleInputChange} 
-            error={!!errors.phone} helperText={errors.phone} />
-        <TextField label="Açıklama" name="description" variant="outlined" size="small" value={formData.description} onChange={handleInputChange} 
-            error={!!errors.description} helperText={errors.description} />
+        <TextField label="Email" name="email" variant="outlined" size="small" value={formData.email} onChange={handleInputChange}
+          error={!!errors.email} helperText={errors.email} />
+        <TextField label="Telefon" name="phone" variant="outlined" size="small" value={formData.phone} onChange={handleInputChange}
+          error={!!errors.phone} helperText={errors.phone} />
+        <TextField label="Açıklama" name="description" variant="outlined" size="small" value={formData.description} onChange={handleInputChange}
+          error={!!errors.description} helperText={errors.description} />
 
         <FormControlLabel
           control={<Checkbox checked={formData.isActive} onChange={onChange} name="isActive" />}
