@@ -98,10 +98,8 @@ function Dashboard() {
     try {
       if (editId) {
         await updateExistingUser(editId, apiPayload);
-        alert(`Kullanıcı :${editId} güncellendi`)
       } else {
         await createNewUser(apiPayload);
-        alert("Yeni kullanıcı eklendi :)")
       }
       getUsers();
       handleCancel();
@@ -298,7 +296,6 @@ function Dashboard() {
         <DialogContent>
           <DialogContentText>
             Bu kullanıcıyı silmek istediğinize emin misiniz? <br />
-            Bu işlem geri alınamaz.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

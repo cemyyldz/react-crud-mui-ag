@@ -79,14 +79,13 @@ function UserDetail() {
     try {
 
       await updateExistingUser(id, apiPayload);
-      alert("Bilgileriniz güncellendi!");
+
 
       setOpen(false);
       getData();
 
     } catch (error) {
       console.log("Güncelleme hatası:", error);
-      alert("Bir hata oluştu.");
     }
   };
   if (loading){

@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { toast } from 'react-toastify';
 
 
 const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) => {
@@ -66,14 +67,18 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()){
+      toast.warning("Lütfen formdaki hataları düzeltin!");
+      return;
+    } 
     setIsSubmitting(true);
 
     try {
       await onSave();
+      toast.success(editId ? "Kullanıcı güncellendi!" : "Yeni kullanıcı eklendi!");
       setErrors({});
     } catch (error) {
-      console.error("Hata:", error);
+      toast.error("Bir hata oluştu.");
     } finally {
       setIsSubmitting(false);
     }
