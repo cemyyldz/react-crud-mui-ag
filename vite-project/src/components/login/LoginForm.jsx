@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { TextField, Button, Typography, Box, Divider, Alert } from "@mui/material";
 import { useAuth } from "../../context/AuthContext";
 import InputAdornment from '@mui/material/InputAdornment';
@@ -13,6 +13,7 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [isDisabled,setIsDisabled] = useState(false);
 
 
   const handleClickShowPassword = () =>
@@ -22,11 +23,13 @@ function LoginForm() {
 
   const handleSubmit = async () => {
     setError(null);
+    setIsDisabled(true);
 
     const result = await login(username, password);
 
     if (!result.success) {
       setError(result.message);
+      setIsDisabled(false);
     }
   };
 
@@ -83,6 +86,7 @@ function LoginForm() {
         fullWidth
         sx={{ mt: 1 }}
         onClick={handleSubmit}
+        disabled={isDisabled}
       >
         Giriş Yap
       </Button>

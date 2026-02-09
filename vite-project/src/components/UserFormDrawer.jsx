@@ -11,6 +11,20 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      await onSave(); 
+    } catch (error) {
+      console.error("Hata:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}
@@ -79,7 +93,7 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         />
 
         <Box display="flex" gap={2} mt={2} flexDirection={{ xs: "column", sm: "row" }}>
-          <Button variant="contained" color={editId ? "warning" : "primary"} onClick={onSave} fullWidth>
+          <Button variant="contained" color={editId ? "warning" : "primary"} onClick={handleSubmit} fullWidth disabled={isSubmitting}>
             {editId ? "Güncelle" : "Ekle"}
           </Button>
           <Button variant='contained' color='inherit' onClick={onClose} fullWidth>
