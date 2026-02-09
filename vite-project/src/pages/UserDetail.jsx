@@ -26,6 +26,7 @@ function UserDetail() {
 
   const getData = async () => {
     try {
+      await new Promise(resolve => setTimeout(resolve, 20));
       setLoading(true);
       const data = await fetchUserById(id);
       setProfileData(data);
@@ -88,12 +89,8 @@ function UserDetail() {
       alert("Bir hata oluştu.");
     }
   };
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" mt={10}>
-        <CircularProgress />
-      </Box>
-    );
+  if (loading){
+    return null;
   }
   if (!profileData) {
     return <Typography sx={{ mt: 4, textAlign: 'center' }}>Kullanıcı bulunamadı.</Typography>;
