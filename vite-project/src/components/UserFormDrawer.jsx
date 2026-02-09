@@ -1,8 +1,17 @@
+import { useState } from 'react';
 import { Drawer, Box, Typography, IconButton, Divider, TextField, FormControlLabel, Checkbox, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 
 const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) => {
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
   return (
     <Drawer anchor="right" open={open} onClose={onClose}
       PaperProps={{
@@ -37,7 +46,29 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         <TextField label="İsim" name="name" variant="outlined" size="small" value={formData.name} onChange={onChange} />
         <TextField label="Soyisim" name="surname" variant="outlined" size="small" value={formData.surname} onChange={onChange} />
         <TextField label="Kullanıcı Adı" name="username" variant="outlined" size="small" value={formData.username} onChange={onChange} />
-        <TextField label="Şifre" name="password" variant="outlined" size="small" value={formData.password} onChange={onChange} />
+        <TextField
+          label="Şifre"
+          name="password"
+          variant="outlined"
+          size="small"
+          value={formData.password}
+          onChange={onChange}
+          type={showPassword ? 'text' : 'password'}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="şifre görünürlüğünü değiştir"
+                  onClick={handleClickShowPassword}
+                  edge="end"
+                  size="small"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
         <TextField label="Email" name="email" variant="outlined" size="small" value={formData.email} onChange={onChange} />
         <TextField label="Telefon" name="phone" variant="outlined" size="small" value={formData.phone} onChange={onChange} />
         <TextField label="Açıklama" name="description" variant="outlined" size="small" value={formData.description} onChange={onChange} />
