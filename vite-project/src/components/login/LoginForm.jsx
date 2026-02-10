@@ -5,15 +5,15 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { toast } from 'react-toastify';
 
 function LoginForm() {
   const { login } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [isDisabled,setIsDisabled] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
 
   const handleClickShowPassword = () =>
@@ -22,31 +22,32 @@ function LoginForm() {
 
 
   const handleSubmit = async () => {
-    setError(null);
     setIsDisabled(true);
 
     const result = await login(username, password);
 
     if (!result.success) {
-      setError(result.message);
+      toast.error(result.message || "Giriş başarısız!");
       setIsDisabled(false);
     }
   };
 
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <Box display="flex" flexDirection="column" gap={2} width="100%" >
+      <Box
+        component="img"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKrfWHfu7t7nVjKwfkdAYTRGdg4WI5XP5zlQ&s"
+        alt="Logo"
+        sx={{
+          width: 100,
+          height: 100,
+          objectFit: "contain",
+          marginBottom: 2,
+          borderRadius: "50%",
+          alignSelf: "center",
+        }}
+      />
 
-      <Typography
-        variant="h4"
-        textAlign="center"
-        fontWeight="bold"
-      >
-        Hoş Geldiniz
-      </Typography>
-
-      <Divider />
-
-      {error && <Alert severity="error">{error}</Alert>}
 
       <TextField
         label="Kullanıcı Adı"
@@ -54,6 +55,16 @@ function LoginForm() {
         size="small"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        sx={{
+          '& label.Mui-focused': {
+            color: '#161d20', 
+          },
+          '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+              borderColor: '#161d20', 
+            },
+          },
+        }}
       />
 
       <TextField
@@ -63,6 +74,16 @@ function LoginForm() {
         size="small"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        sx={{
+          '& label.Mui-focused': {
+            color: '#161d20', 
+          },
+          '& .MuiOutlinedInput-root': {
+            '&.Mui-focused fieldset': {
+              borderColor: '#161d20', 
+            },
+          },
+        }}
         slotProps={{
           input: {
             endAdornment: (
@@ -83,8 +104,23 @@ function LoginForm() {
       <Button
         variant="contained"
         size="large"
-        fullWidth
-        sx={{ mt: 1 }}
+        sx={{
+          borderRadius: 5,
+          width: "50%",    
+          alignSelf: "center",
+          mt: 1,
+          background: "#161d20",
+          color: "#ffffff",
+          textTransform: "none",
+          fontSize: "1rem",
+          boxShadow: 0,
+          '&:hover': {
+            backgroundColor: "#2b3234",
+            boxShadow: 0
+          }
+
+
+        }}
         onClick={handleSubmit}
         disabled={isDisabled}
       >
