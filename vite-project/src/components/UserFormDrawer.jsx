@@ -117,19 +117,20 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
     <Drawer anchor="right" open={open} onClose={onClose}
       PaperProps={{
         sx: {
-          width: { xs: "100%", sm: 400 },
+          width: { xs: "100%", sm: 550 },
           maxWidth: "100%",
           height: { xs: "100vh", sm: "100%" },
+          backgroundColor: "#f8f9fa",
         },
       }}
 
     >
 
       <Box sx={{
-        p: { xs: 2, sm: 3 },
+        p: { xs: 2, sm: 4 },
         display: "flex",
         flexDirection: "column",
-        gap: 2,
+        gap: 2.5,
         height: "100%",
         overflowY: "auto",
       }}>
@@ -209,7 +210,7 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
             }}>
             {editId ? "Güncelle" : "Ekle"}
           </Button>
-          <Button variant='contained' color='inherit' onClick={onClose} fullWidth sx={{
+          <Button variant='outlined' color='inherit' onClick={onClose} fullWidth sx={{
                 color: '#161d20',
                 borderColor: '#161d20',
                 fontFamily: "'Montserrat', sans-serif",
