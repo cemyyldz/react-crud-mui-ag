@@ -256,15 +256,19 @@ function Dashboard() {
         />
       </Box>
 
-      <div className="ag-theme-quartz" style={{ height: 500, width: '100%', overflowX: 'auto' }} >
+      <div className="ag-theme-quartz" style={{ height: 'calc(100vh - 300px)', width: '100%' }} >
         <AgGridReact
           rowData={users}
           columnDefs={columnDefs}
           pagination={true}
-          paginationPageSize={10}
-          paginationPageSizeSelector={[10, 20, 50]}
+          paginationPageSize={isMobile ? 15 : 20}
+          paginationPageSizeSelector={[15,20, 40, 100]}
           quickFilterText={searchTerm}
-          domLayout="autoHeight"
+          onGridReady={(params) => {
+             if(!isMobile) {
+                params.api.sizeColumnsToFit(); 
+             }
+          }}
           onRowClicked={(event) => {
             if (event.event.target.closest("button")) {
               return;
