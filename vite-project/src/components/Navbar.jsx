@@ -11,20 +11,20 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import myAvatar from '../assets/benimFoto.jpg';
 
 import { useAuth } from '../context/AuthContext';
 
 const pages = ['Personel', 'Raporlar', 'Ayarlar'];
 const settings = ['Profil', 'Hesap', 'Logout'];
 
-function Navbar () {
-  const { logout , user } = useAuth();
+function Navbar() {
+  const { logout, user } = useAuth();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const handleOpenNavMenu =(event) =>{
+  const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
 
@@ -42,20 +42,36 @@ function Navbar () {
 
   const handleMenuClick = (setting) => {
     handleCloseUserMenu();
-    if(setting == 'Logout'){
+    if (setting == 'Logout') {
       logout();
     }
   };
 
+  const logoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKrfWHfu7t7nVjKwfkdAYTRGdg4WI5XP5zlQ&s";
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: '#161d20' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 
-          {/* MASAÜSTÜ LOGO */}
-          
+          <Box
+            component="img"
+            src={logoUrl}
+            alt="Logo"
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              mr: 1,
+              height: 40,
+              width: 40,
+              borderRadius: '50%',
+              objectFit: 'contain'
+            }}
+          />
 
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+
+
+
+
           <Typography
             variant="h6"
             noWrap
@@ -64,9 +80,10 @@ function Navbar () {
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              fontFamily: "'Montserrat', sans-serif",
               fontWeight: 700,
-              letterSpacing: '.3rem',
+
+              letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
@@ -74,7 +91,7 @@ function Navbar () {
             Yönetim Paneli
           </Typography>
 
-          {/* MOBİL MENÜ İKONU */}
+
 
 
 
@@ -101,15 +118,25 @@ function Navbar () {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                  <Typography textAlign="center" sx={{ fontFamily: "'Montserrat', sans-serif" }}>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
+          <Box
+            component="img"
+            src={logoUrl}
+            alt="Logo"
+            sx={{
+              display: { xs: 'flex', md: 'none' },
+              mr: 1,
+              height: 35,
+              width: 35,
+              borderRadius: '50%',
+              objectFit: 'contain'
+            }}
+          />
 
-          {/* MOBİL LOGO */}
-
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -119,37 +146,42 @@ function Navbar () {
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: "'Montserrat', sans-serif",
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
+
+
             }}
           >
-            LOGO
+            Panel
           </Typography>
 
-          {/* MASAÜSTÜ MENÜLER */}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{
+                  my: 2, color: 'white', display: 'block', fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 600, '&:hover': {
+                    backgroundColor: '#2b3234'
+                  }
+                }}
               >
                 {page}
               </Button>
             ))}
           </Box>
 
-          {/* SAĞ TARAFTAKİ KULLANICI MENÜSÜ */}
+
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Ayarları Aç">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                 {/* Kullanıcı varsa isminin baş harfini göster, yoksa U yaz */}
-                <Avatar alt={user?.name || "User"} src="/static/images/avatar/2.jpg">
-                    {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                <Avatar alt={user?.name || "User"} src={myAvatar}  >
+                  {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
                 </Avatar>
               </IconButton>
             </Tooltip>
@@ -165,7 +197,7 @@ function Navbar () {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={() => handleMenuClick(setting)}>
-                  <Typography textAlign="center">{setting}</Typography>
+                  <Typography textAlign="center" sx={{ fontFamily: "'Montserrat', sans-serif" }}>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>

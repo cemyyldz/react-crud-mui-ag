@@ -6,6 +6,25 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { toast } from 'react-toastify';
 
+const commonTextFieldSx = {
+  '& label.Mui-focused': {
+    color: '#161d20',
+  },
+  '& .MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      borderColor: '#161d20',
+    },
+  },
+  '& .MuiInputBase-input': {
+    fontFamily: "'Montserrat', sans-serif",
+  },
+  '& .MuiInputLabel-root': {
+    fontFamily: "'Montserrat', sans-serif",
+  }
+};
+
+
+
 
 const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) => {
 
@@ -67,10 +86,10 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()){
+    if (!validateForm()) {
       toast.warning("Lütfen formdaki hataları düzeltin!");
       return;
-    } 
+    }
     setIsSubmitting(true);
 
     try {
@@ -115,7 +134,7 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         overflowY: "auto",
       }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-          <Typography variant="h6">
+          <Typography variant="h6" sx={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700 }}>
             {editId ? "Kullanıcı Düzenle" : "Yeni Kayıt Oluştur"}
           </Typography>
           <IconButton onClick={onClose}>
@@ -126,12 +145,12 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         <Divider />
 
         <TextField label="İsim" name="name" variant="outlined" size="small" value={formData.name} onChange={handleInputChange}
-          error={!!errors.name} helperText={errors.name} />
+          error={!!errors.name} helperText={errors.name} sx={commonTextFieldSx} />
         <TextField label="Soyisim" name="surname" variant="outlined" size="small" value={formData.surname} onChange={handleInputChange}
-          error={!!errors.surname} helperText={errors.surname} />
+          error={!!errors.surname} helperText={errors.surname} sx={commonTextFieldSx} />
         <TextField label="Kullanıcı Adı" name="username" variant="outlined" size="small" value={formData.username} onChange={handleInputChange}
           error={!!errors.username}
-          helperText={errors.username} />
+          helperText={errors.username} sx={commonTextFieldSx} />
         <TextField
           label="Şifre"
           name="password"
@@ -140,7 +159,7 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
           value={formData.password}
           onChange={handleInputChange}
           error={!!errors.password} helperText={errors.password}
-          type={showPassword ? 'text' : 'password'}
+          type={showPassword ? 'text' : 'password'} sx={commonTextFieldSx}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -157,22 +176,49 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
           }}
         />
         <TextField label="Email" name="email" variant="outlined" size="small" value={formData.email} onChange={handleInputChange}
-          error={!!errors.email} helperText={errors.email} />
+          error={!!errors.email} helperText={errors.email} sx={commonTextFieldSx} />
         <TextField label="Telefon" name="phone" variant="outlined" size="small" value={formData.phone} onChange={handleInputChange}
-          error={!!errors.phone} helperText={errors.phone} />
+          error={!!errors.phone} helperText={errors.phone} sx={commonTextFieldSx} />
         <TextField label="Açıklama" name="description" variant="outlined" size="small" value={formData.description} onChange={handleInputChange}
-          error={!!errors.description} helperText={errors.description} />
+          error={!!errors.description} helperText={errors.description} sx={commonTextFieldSx} multiline rows={3} />
 
         <FormControlLabel
-          control={<Checkbox checked={formData.isActive} onChange={onChange} name="isActive" />}
-          label="Kullanıcı Aktif mi?"
+          control={<Checkbox checked={formData.isActive} onChange={onChange} name="isActive" sx={{
+            color: '#161d20',
+            '&.Mui-checked': {
+              color: '#161d20',
+            },
+          }} />}
+          label={
+            <Typography sx={{ fontFamily: "'Montserrat', sans-serif" }}>
+              Kullanıcı Aktif mi?
+            </Typography>
+          }
         />
 
         <Box display="flex" gap={2} mt={2} flexDirection={{ xs: "column", sm: "row" }}>
-          <Button variant="contained" color={editId ? "warning" : "primary"} onClick={handleSubmit} fullWidth disabled={isSubmitting}>
+          <Button variant="contained" color={editId ? "warning" : "primary"} onClick={handleSubmit} fullWidth disabled={isSubmitting} sx={{
+                backgroundColor: '#161d20',
+                color: '#ffffff',
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 600,
+                textTransform: 'none',
+                '&:hover': {
+                    backgroundColor: '#2b3234',
+                }
+            }}>
             {editId ? "Güncelle" : "Ekle"}
           </Button>
-          <Button variant='contained' color='inherit' onClick={onClose} fullWidth>
+          <Button variant='contained' color='inherit' onClick={onClose} fullWidth sx={{
+                color: '#161d20',
+                borderColor: '#161d20',
+                fontFamily: "'Montserrat', sans-serif",
+                textTransform: 'none',
+                '&:hover': {
+                    borderColor: '#161d20',
+                    backgroundColor: 'rgba(22, 29, 32, 0.05)'
+                }
+            }}>
             Vazgeç
           </Button>
         </Box>
