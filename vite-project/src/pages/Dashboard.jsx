@@ -33,6 +33,17 @@ function Dashboard() {
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
+  const [debouncedSearchTerm,setDebouncedSearchTerm] = useState("");
+
+  useEffect(() => {
+    const timerId = setTimeout(() =>{
+      setDebouncedSearchTerm(searchTerm);
+    },1500);
+
+    return() =>{
+      clearTimeout(timerId);
+    };
+  },[searchTerm]);
 
 
   const [formData, setFormData] = useState({
@@ -301,9 +312,9 @@ function Dashboard() {
           rowData={users}
           columnDefs={columnDefs}
           pagination={true}
-          paginationPageSize={isMobile ? 15 : 20}
-          paginationPageSizeSelector={[15, 20, 40, 100]}
-          quickFilterText={searchTerm}
+          paginationPageSize={isMobile ? 12 : 20}
+          paginationPageSizeSelector={[12, 20, 40, 100]}
+          quickFilterText={debouncedSearchTerm}
           onGridReady={(params) => {
             if (!isMobile) {
               params.api.sizeColumnsToFit();
