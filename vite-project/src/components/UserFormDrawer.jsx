@@ -111,6 +111,10 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
     }
   };
 
+  const [focusedFieldName, setFocusedFieldName] = useState(null);
+  const [focusedFieldSurname, setFocusedFieldSurname] = useState(null);
+  const isNameVisible = focusedFieldName === 'name' || !!formData.name;
+  const isSurnameVisible = focusedFieldSurname === 'surname' || !!formData.surname;
 
 
   return (
@@ -119,7 +123,15 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         sx: {
           width: { xs: "100%", sm: 550 },
           maxWidth: "100%",
-          height: { xs: "100vh", sm: "100%" },
+          height: "auto",          
+          maxHeight: "90vh",        
+          
+ 
+          margin: "auto",
+          top: "5vh",       
+          right: { sm: "20px" },   
+          
+          borderRadius: "20px", 
           backgroundColor: "#f8f9fa",
         },
       }}
@@ -145,9 +157,70 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
 
         <Divider />
 
-        <TextField label="İsim" name="name" variant="outlined" size="small" value={formData.name} onChange={handleInputChange}
-          error={!!errors.name} helperText={errors.name} sx={commonTextFieldSx} />
-        <TextField label="Soyisim" name="surname" variant="outlined" size="small" value={formData.surname} onChange={handleInputChange}
+        {isNameVisible && (
+          <Typography
+            sx={{
+              fontSize: 18,
+              fontWeight: 600,
+              color: '#161d20',
+              fontFamily: "'Montserrat', sans-serif",
+
+              opacity: isNameVisible ? 1 : 0,
+              transform: isNameVisible
+                ? 'translateY(0)'
+                : 'translateY(6px)',
+
+              transition: 'opacity 180ms ease, transform 180ms ease',
+              height: 16,
+              pointerEvents: 'none',
+            }}
+          >
+            İsim
+          </Typography>
+        )}
+
+        <TextField
+          name="name"
+          size="small"
+          fullWidth
+          value={formData.name}
+          onChange={handleInputChange}
+          onFocus={() => setFocusedFieldName('name')}
+          onBlur={() => setFocusedFieldName(null)}
+          placeholder={
+            !focusedFieldName && !formData.name ? 'İsim' : ''
+          }
+          error={!!errors.name}
+          helperText={errors.name}
+          sx={commonTextFieldSx}
+        />
+
+        {isSurnameVisible && (
+          <Typography
+            sx={{
+              fontSize: 18,
+              fontWeight: 600,
+              color: '#161d20',
+              fontFamily: "'Montserrat', sans-serif",
+
+              opacity: isSurnameVisible ? 1 : 0,
+              transform: isSurnameVisible
+                ? 'translateY(0)'
+                : 'translateY(6px)',
+
+              transition: 'opacity 180ms ease, transform 180ms ease',
+              height: 16,
+              pointerEvents: 'none',
+            }}
+          >
+            Soyisim
+          </Typography>
+        )}
+        <TextField name="surname" size="small" fullWidth value={formData.surname} onChange={handleInputChange} onFocus={() => setFocusedFieldSurname('surname')}
+          onBlur={() => setFocusedFieldSurname(null)}
+          placeholder={
+            !focusedFieldSurname && !formData.surname ? 'Soyisim' : ''
+          }
           error={!!errors.surname} helperText={errors.surname} sx={commonTextFieldSx} />
         <TextField label="Kullanıcı Adı" name="username" variant="outlined" size="small" value={formData.username} onChange={handleInputChange}
           error={!!errors.username}
@@ -199,27 +272,27 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
 
         <Box display="flex" gap={2} mt={2} flexDirection={{ xs: "column", sm: "row" }}>
           <Button variant="contained" color={editId ? "warning" : "primary"} onClick={handleSubmit} fullWidth disabled={isSubmitting} sx={{
-                backgroundColor: '#161d20',
-                color: '#ffffff',
-                fontFamily: "'Montserrat', sans-serif",
-                fontWeight: 600,
-                textTransform: 'none',
-                '&:hover': {
-                    backgroundColor: '#2b3234',
-                }
-            }}>
+            backgroundColor: '#161d20',
+            color: '#ffffff',
+            fontFamily: "'Montserrat', sans-serif",
+            fontWeight: 600,
+            textTransform: 'none',
+            '&:hover': {
+              backgroundColor: '#2b3234',
+            }
+          }}>
             {editId ? "Güncelle" : "Ekle"}
           </Button>
           <Button variant='outlined' color='inherit' onClick={onClose} fullWidth sx={{
-                color: '#161d20',
-                borderColor: '#161d20',
-                fontFamily: "'Montserrat', sans-serif",
-                textTransform: 'none',
-                '&:hover': {
-                    borderColor: '#161d20',
-                    backgroundColor: 'rgba(22, 29, 32, 0.05)'
-                }
-            }}>
+            color: '#161d20',
+            borderColor: '#161d20',
+            fontFamily: "'Montserrat', sans-serif",
+            textTransform: 'none',
+            '&:hover': {
+              borderColor: '#161d20',
+              backgroundColor: 'rgba(22, 29, 32, 0.05)'
+            }
+          }}>
             Vazgeç
           </Button>
         </Box>
