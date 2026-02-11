@@ -185,17 +185,29 @@ function Dashboard() {
       minWidth: isMobile ? 140 : 200,
       width: isMobile ? 140 : undefined,
       flex: isMobile ? undefined : 1,
+      headerClass: 'header-center',
 
       cellRenderer: (params) => {
         return (
-          <Box display="flex" gap={1}>
+          <Box display="flex" gap={1} width="100%" height="100%" justifyContent="center" alignItems="center" >
             <Button
               variant='outlined'
               color='primary'
               size='small'
               startIcon={!isMobile ? <EditIcon /> : null}
               onClick={() => handleEdit(params.data)}
-              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px', aspectRatio: isMobile ? '1/1' : 'auto' }}
+              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '6px 10px', aspectRatio: isMobile ? '1/1' : 'auto',
+               color: '#4085a3',              
+                borderColor: '#4085a3',        
+                fontFamily: "'Montserrat', sans-serif",
+                textTransform: 'none',         
+                fontWeight: 600, 
+
+                '&:hover': {
+                  borderColor: '#4085a3',
+                  backgroundColor: 'rgba(64, 133, 163, 0.08)',
+                }
+               }}
             >
               {isMobile ? <EditIcon fontSize='small' /> : 'Düzenle'}
             </Button>
@@ -205,7 +217,11 @@ function Dashboard() {
               size='small'
               startIcon={!isMobile ? <DeleteIcon /> : null}
               onClick={() => handleDeleteClick(params.data.id)}
-              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '4px 10px', aspectRatio: isMobile ? '1/1' : 'auto' }}
+              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '6px 10px', aspectRatio: isMobile ? '1/1' : 'auto',
+                fontFamily: "'Montserrat', sans-serif",
+                textTransform: 'none',
+                fontWeight: 600,
+              }}
             >{isMobile ? <DeleteIcon fontSize='small' /> : 'Sil'}</Button>
           </Box>
         );
@@ -219,7 +235,13 @@ function Dashboard() {
     <Container maxWidth="xl" sx={{ marginTop: 4 }}>
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Typography variant="h4">
+        <Typography variant="h4" sx={{
+          fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 700,
+              color: '#161d20',
+              letterSpacing: '-1px',
+
+        }}>
           Personel Listesi
         </Typography>
       </Box>
