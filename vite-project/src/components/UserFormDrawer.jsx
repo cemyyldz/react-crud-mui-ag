@@ -81,7 +81,7 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
       toast.success(editId ? "Kullanıcı güncellendi!" : "Yeni kullanıcı eklendi!");
       setErrors({});
     } catch (error) {
-      toast.error("Bir hata oluştu.");
+      toast.error("Kullanıcı eklenemedi.Bir hata oluştu.");
     } finally {
       setIsSubmitting(false);
     }

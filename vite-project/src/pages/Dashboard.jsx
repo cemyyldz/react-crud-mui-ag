@@ -108,6 +108,7 @@ function Dashboard() {
     }
     catch (error) {
       console.log("Kayıt oluşturulurken bir hata oluştu.", error);
+      throw error;
     }
   };
 
