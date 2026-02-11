@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import { toast } from 'react-toastify';
+import { CommonTextFieldSx } from '../components/custom/CommonTextFieldSx';
+import CustomDialogTitle from '../components/custom/CustomDialogTitle';
 
 
 
@@ -196,18 +198,19 @@ function Dashboard() {
               size='small'
               startIcon={!isMobile ? <EditIcon /> : null}
               onClick={() => handleEdit(params.data)}
-              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '6px 10px', aspectRatio: isMobile ? '1/1' : 'auto',
-               color: '#4085a3',              
-                borderColor: '#4085a3',        
+              sx={{
+                minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '6px 10px', aspectRatio: isMobile ? '1/1' : 'auto',
+                color: '#4085a3',
+                borderColor: '#4085a3',
                 fontFamily: "'Montserrat', sans-serif",
-                textTransform: 'none',         
-                fontWeight: 600, 
+                textTransform: 'none',
+                fontWeight: 600,
 
                 '&:hover': {
                   borderColor: '#4085a3',
                   backgroundColor: 'rgba(64, 133, 163, 0.08)',
                 }
-               }}
+              }}
             >
               {isMobile ? <EditIcon fontSize='small' /> : 'Düzenle'}
             </Button>
@@ -217,7 +220,8 @@ function Dashboard() {
               size='small'
               startIcon={!isMobile ? <DeleteIcon /> : null}
               onClick={() => handleDeleteClick(params.data.id)}
-              sx={{ minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '6px 10px', aspectRatio: isMobile ? '1/1' : 'auto',
+              sx={{
+                minWidth: isMobile ? 35 : 64, padding: isMobile ? 1 : '6px 10px', aspectRatio: isMobile ? '1/1' : 'auto',
                 fontFamily: "'Montserrat', sans-serif",
                 textTransform: 'none',
                 fontWeight: 600,
@@ -237,9 +241,9 @@ function Dashboard() {
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
         <Typography variant="h4" sx={{
           fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 700,
-              color: '#161d20',
-              letterSpacing: '-1px',
+          fontWeight: 700,
+          color: '#161d20',
+          letterSpacing: '-1px',
 
         }}>
           Personel Listesi
@@ -286,20 +290,7 @@ function Dashboard() {
           }}
           sx={{
             width: { xs: "100%", sm: 300 },
-            '& label.Mui-focused': {
-              color: '#161d20',
-            },
-            '& .MuiOutlinedInput-root': {
-              '&.Mui-focused fieldset': {
-                borderColor: '#161d20',
-              },
-            },
-            '& .MuiInputBase-input': {
-              fontFamily: "'Montserrat', sans-serif",
-            },
-            '& .MuiInputLabel-root': {
-              fontFamily: "'Montserrat', sans-serif",
-            }
+            ...CommonTextFieldSx
           }}
         />
       </Box>
@@ -337,28 +328,13 @@ function Dashboard() {
         onSave={handleSave}
       />
 
-      <Dialog
+      <CustomDialogTitle
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
-      >
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <WarningIcon color="warning" />
-          Silme İşlemi
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Bu kullanıcıyı silmek istediğinize emin misiniz? <br />
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)} color="inherit">
-            Vazgeç
-          </Button>
-          <Button onClick={confirmDelete} color="error" variant="contained" autoFocus>
-            Evet, Sil
-          </Button>
-        </DialogActions>
-      </Dialog>
+        onConfirm={confirmDelete}
+        title="Silme İşlemi"
+        text="Bu kullanıcıyı silmek istediğinize emin misiniz???"
+      />
 
 
     </Container>

@@ -4,25 +4,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import CustomTextFieldTitle from './custom/CustomTextFieldTitle';
 import { toast } from 'react-toastify';
-
-const commonTextFieldSx = {
-  '& label.Mui-focused': {
-    color: '#161d20',
-  },
-  '& .MuiOutlinedInput-root': {
-    '&.Mui-focused fieldset': {
-      borderColor: '#161d20',
-    },
-  },
-  '& .MuiInputBase-input': {
-    fontFamily: "'Montserrat', sans-serif",
-  },
-  '& .MuiInputLabel-root': {
-    fontFamily: "'Montserrat', sans-serif",
-  }
-};
-
+import {CommonTextFieldSx} from './custom/CommonTextFieldSx';
 
 
 
@@ -157,28 +141,9 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         </Box>
 
         <Divider />
-
-        {isNameVisible && (
-          <Typography
-            sx={{
-              fontSize: 18,
-              fontWeight: 600,
-              color: '#161d20',
-              fontFamily: "'Montserrat', sans-serif",
-
-              opacity: isNameVisible ? 1 : 0,
-              transform: isNameVisible
-                ? 'translateY(0)'
-                : 'translateY(6px)',
-
-              transition: 'opacity 180ms ease, transform 180ms ease',
-              height: 16,
-              pointerEvents: 'none',
-            }}
-          >
-            İsim
-          </Typography>
-        )}
+        <CustomTextFieldTitle>
+          İsim
+        </CustomTextFieldTitle>
 
         <TextField
           name="name"
@@ -186,55 +151,45 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
           fullWidth
           value={formData.name}
           onChange={handleInputChange}
-          onFocus={() => setFocusedFieldName('name')}
-          onBlur={() => setFocusedFieldName(null)}
           placeholder={
-            !focusedFieldName && !formData.name ? 'İsim' : ''
+            'John'
           }
           error={!!errors.name}
           helperText={errors.name}
-          sx={commonTextFieldSx}
+          sx={CommonTextFieldSx}
         />
 
-        {isSurnameVisible && (
-          <Typography
-            sx={{
-              fontSize: 18,
-              fontWeight: 600,
-              color: '#161d20',
-              fontFamily: "'Montserrat', sans-serif",
-
-              opacity: isSurnameVisible ? 1 : 0,
-              transform: isSurnameVisible
-                ? 'translateY(0)'
-                : 'translateY(6px)',
-
-              transition: 'opacity 180ms ease, transform 180ms ease',
-              height: 16,
-              pointerEvents: 'none',
-            }}
-          >
-            Soyisim
-          </Typography>
-        )}
-        <TextField name="surname" size="small" fullWidth value={formData.surname} onChange={handleInputChange} onFocus={() => setFocusedFieldSurname('surname')}
-          onBlur={() => setFocusedFieldSurname(null)}
+        <CustomTextFieldTitle>
+          Soyisim
+        </CustomTextFieldTitle>
+        <TextField name="surname" size="small" fullWidth value={formData.surname} onChange={handleInputChange}
           placeholder={
-            !focusedFieldSurname && !formData.surname ? 'Soyisim' : ''
+            'Doe'
           }
-          error={!!errors.surname} helperText={errors.surname} sx={commonTextFieldSx} />
-        <TextField label="Kullanıcı Adı" name="username" variant="outlined" size="small" value={formData.username} onChange={handleInputChange}
+          error={!!errors.surname} helperText={errors.surname} sx={CommonTextFieldSx} />
+
+
+
+
+        <CustomTextFieldTitle>Kullanıcı Adı</CustomTextFieldTitle>
+        <TextField name="username" variant="outlined" size="small" value={formData.username} onChange={handleInputChange} placeholder={'johndoe'}
           error={!!errors.username}
-          helperText={errors.username} sx={commonTextFieldSx} />
+          helperText={errors.username} sx={CommonTextFieldSx} />
+
+
+
+        <CustomTextFieldTitle>
+          Şifre
+        </CustomTextFieldTitle>
         <TextField
-          label="Şifre"
           name="password"
           variant="outlined"
           size="small"
           value={formData.password}
           onChange={handleInputChange}
+          placeholder={'********'}
           error={!!errors.password} helperText={errors.password}
-          type={showPassword ? 'text' : 'password'} sx={commonTextFieldSx}
+          type={showPassword ? 'text' : 'password'} sx={CommonTextFieldSx}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -250,12 +205,24 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
             ),
           }}
         />
-        <TextField label="Email" name="email" variant="outlined" size="small" value={formData.email} onChange={handleInputChange}
-          error={!!errors.email} helperText={errors.email} sx={commonTextFieldSx} />
-        <TextField label="Telefon" name="phone" variant="outlined" size="small" value={formData.phone} onChange={handleInputChange}
-          error={!!errors.phone} helperText={errors.phone} sx={commonTextFieldSx} />
-        <TextField label="Açıklama" name="description" variant="outlined" size="small" value={formData.description} onChange={handleInputChange}
-          error={!!errors.description} helperText={errors.description} sx={commonTextFieldSx} multiline rows={3} />
+
+
+        <CustomTextFieldTitle>Email</CustomTextFieldTitle>
+        <TextField name="email" variant="outlined" size="small" value={formData.email} onChange={handleInputChange}
+          error={!!errors.email} helperText={errors.email}
+          placeholder={'johndoe@gmail.com'} sx={CommonTextFieldSx} />
+
+        <CustomTextFieldTitle>Telefon</CustomTextFieldTitle>
+        <TextField name="phone" variant="outlined" size="small" value={formData.phone} onChange={handleInputChange}
+        placeholder={'05322359476'}
+          error={!!errors.phone} helperText={errors.phone} sx={CommonTextFieldSx} />
+
+        <CustomTextFieldTitle>Açıklama</CustomTextFieldTitle>
+        <TextField name="description" variant="outlined" size="small" value={formData.description} onChange={handleInputChange}
+        placeholder='Grizzle Techte çalışıyorum.'
+          error={!!errors.description} helperText={errors.description} sx={CommonTextFieldSx} multiline rows={3} />
+
+
 
         <FormControlLabel
           control={<Checkbox checked={formData.isActive} onChange={onChange} name="isActive" sx={{
@@ -273,13 +240,13 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
 
         <Box display="flex" gap={2} mt={2} flexDirection={{ xs: "column", sm: "row" }}>
           <Button variant="contained" color={editId ? "warning" : "primary"} onClick={handleSubmit} fullWidth disabled={isSubmitting} sx={{
-            backgroundColor: '#161d20',
+            backgroundColor: editId ? '#4085a3' : '#161d20',
             color: '#ffffff',
             fontFamily: "'Montserrat', sans-serif",
             fontWeight: 600,
             textTransform: 'none',
             '&:hover': {
-              backgroundColor: '#2b3234',
+              backgroundColor: editId ? '#346b82' : '#2b3234',
             }
           }}>
             {editId ? "Güncelle" : "Ekle"}
