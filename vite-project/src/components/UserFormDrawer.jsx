@@ -123,15 +123,16 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
         sx: {
           width: { xs: "100%", sm: 550 },
           maxWidth: "100%",
-          height: "auto",          
-          maxHeight: "90vh",        
-          
- 
+          height: "auto",
+          maxHeight: "90vh",
+
+
           margin: "auto",
-          top: "5vh",       
-          right: { sm: "20px" },   
-          
-          borderRadius: "20px", 
+          top: "10vh",
+          right: { sm: "20px" },
+
+
+          borderRadius: "20px",
           backgroundColor: "#f8f9fa",
         },
       }}

@@ -62,7 +62,7 @@ function Dashboard() {
   }, []);
 
   const handleDeleteClick = (id) => {
-    setIdToDelete(id);      
+    setIdToDelete(id);
     setOpenDeleteDialog(true);
   };
 
@@ -70,7 +70,7 @@ function Dashboard() {
     if (!idToDelete) return;
 
     try {
-      await deleteUserById(idToDelete); 
+      await deleteUserById(idToDelete);
       toast.success("Kullanıcı başarıyla silindi!");
       getUsers();
 
@@ -232,7 +232,19 @@ function Dashboard() {
         justifyContent: { sm: "space-between" },
       }}>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)}
-          sx={{ width: { xs: "100%", sm: "auto" } }}>
+          sx={{
+            width: {
+              xs: "100%", sm: "auto",
+              backgroundColor: '#161d20',
+              color: '#ffffff',
+              textTransform: 'none',
+              fontFamily: "'Montserrat', sans-serif",
+              fontWeight: 600,
+              '&:hover': {
+                backgroundColor: '#2b3234',
+              }
+            }
+          }}>
           Kullanıcı Ekle
         </Button>
         <TextField
@@ -251,7 +263,21 @@ function Dashboard() {
             }
           }}
           sx={{
-            width: { xs: "100%", sm: 300 }
+            width: { xs: "100%", sm: 300 },
+            '& label.Mui-focused': {
+              color: '#161d20',
+            },
+            '& .MuiOutlinedInput-root': {
+              '&.Mui-focused fieldset': {
+                borderColor: '#161d20',
+              },
+            },
+            '& .MuiInputBase-input': {
+              fontFamily: "'Montserrat', sans-serif",
+            },
+            '& .MuiInputLabel-root': {
+              fontFamily: "'Montserrat', sans-serif",
+            }
           }}
         />
       </Box>
@@ -262,12 +288,12 @@ function Dashboard() {
           columnDefs={columnDefs}
           pagination={true}
           paginationPageSize={isMobile ? 15 : 20}
-          paginationPageSizeSelector={[15,20, 40, 100]}
+          paginationPageSizeSelector={[15, 20, 40, 100]}
           quickFilterText={searchTerm}
           onGridReady={(params) => {
-             if(!isMobile) {
-                params.api.sizeColumnsToFit(); 
-             }
+            if (!isMobile) {
+              params.api.sizeColumnsToFit();
+            }
           }}
           onRowClicked={(event) => {
             if (event.event.target.closest("button")) {
