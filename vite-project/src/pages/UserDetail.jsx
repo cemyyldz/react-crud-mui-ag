@@ -3,13 +3,20 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   Container, Typography, Card, CardContent, Button, Box, CircularProgress,
   Divider,
-  Avatar
+  Avatar,Grid
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import InfoIcon from '@mui/icons-material/Info';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { useAuth } from "../context/AuthContext";
 import { fetchUserById, updateExistingUser } from "../api/userService";
 import UserFormDrawer from "../components/UserFormDrawer";
+import CustomTextFieldTitle from '../components/custom/CustomTextFieldTitle';
+
 function UserDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -88,77 +95,155 @@ function UserDetail() {
       console.log("Güncelleme hatası:", error);
     }
   };
-  if (loading){
+  if (loading) {
     return null;
   }
   if (!profileData) {
-    return <Typography sx={{ mt: 4, textAlign: 'center' }}>Kullanıcı bulunamadı.</Typography>;
+    return <Typography sx={{ mt: 4, textAlign: 'center', fontFamily: "'Montserrat', sans-serif" }}>Kullanıcı bulunamadı.</Typography>;
   }
 
   const isOwner = String(currentUser?.id) === String(profileData.id);
 
   return (
-    <Container maxWidth="md" sx={{ mt: 4 }}>
+    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
       <Button
         startIcon={<ArrowBackIcon />}
         onClick={() => navigate(-1)}
-        sx={{ mb: 2 }}
+        sx={{
+          mb: 3, color: '#161d20',
+          borderColor: '#161d20',
+          fontFamily: "'Montserrat', sans-serif",
+          fontWeight: 600,
+          textTransform: 'none',
+          borderRadius: '10px',
+          border: '1px solid',
+          '&:hover': {
+            borderColor: '#161d20',
+            backgroundColor: 'rgba(22, 29, 32, 0.05)'
+          }
+        }}
       >
         Listeye Dön
       </Button>
 
-      <Card elevation={3}>
-        <CardContent sx={{ p: 4 }}>
+      <Card elevation={0} sx={{
+        borderRadius: '24px',
+        border: '1px solid #e0e0e0',
+        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.03)'
+      }}>
+        <CardContent sx={{ p: { xs: 3, md: 5 } }}>
 
-          <Box display="flex" alignItems="center" gap={2} mb={3}>
+          <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} alignItems="center" gap={3} mb={4}>
             <Avatar
-              sx={{ width: 64, height: 64, bgcolor: 'primary.main', fontSize: 24 }}
+              sx={{
+                width: 100,
+                height: 100,
+                backgroundColor: '#4085a3',
+                fontSize: 40,
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 700,
+                boxShadow: '0px 4px 12px rgba(22, 29, 32, 0.2)'
+              }}
             >
               {profileData.isim?.charAt(0).toUpperCase()}
             </Avatar>
-            <Box>
-              <Typography variant="h4">
+            <Box textAlign={{ xs: 'center', sm: 'left' }}>
+              <Typography variant="h4" sx={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, color: '#161d20' }}>
                 {profileData.isim} {profileData.soyisim}
               </Typography>
-              <Typography variant="subtitle1" color="text.secondary">
+              <Typography variant="h6" sx={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500, color: '#161d20' }}>
                 @{profileData.username}
               </Typography>
+
+
+
+
+              <Box display="inline-flex" alignItems="center" gap={0.5} mt={1} sx={{
+                bgcolor: profileData.isActive ? 'rgba(46, 125, 50, 0.1)' : 'rgba(211, 47, 47, 0.1)',
+                color: profileData.isActive ? '#2e7d32' : '#d32f2f',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '0.875rem',
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 600
+              }}>
+                {profileData.isActive ? <CheckCircleIcon fontSize="small" /> : <CancelIcon fontSize="small" />}
+                {profileData.isActive ? "Aktif Üye" : "Pasif Üye"}
+
+              </Box>
             </Box>
           </Box>
 
-          <Divider sx={{ mb: 3 }} />
+          <Divider sx={{ mb: 4 }} />
 
-          <Box display="flex" flexDirection="column" gap={2}>
-            <Typography><strong>Email:</strong> {profileData.email}</Typography>
-            <Typography><strong>Telefon:</strong> {profileData.telefon}</Typography>
-            <Typography>
-              <strong>Durum:</strong>
-              <span style={{
-                color: profileData.isActive ? 'green' : 'red',
-                marginLeft: 8,
-                fontWeight: 'bold'
-              }}>
-                {profileData.isActive ? "Aktif Üye" : "Pasif Üye"}
-              </span>
-            </Typography>
-            <Typography>
-              <strong>Açıklama:</strong> <br />
-              {profileData.aciklama || "Açıklama girilmemiş."}
-            </Typography>
-          </Box>
 
-          <Box mt={4} display="flex" justifyContent="flex-end">
+          <Grid container spacing={4}>
+            <Grid item xs={12} sm={6}>
+              <Box display="flex" alignItems="center" gap={1.5} mb={1}>
+                <EmailIcon sx={{ color: '#4085a3' }} />
+                <CustomTextFieldTitle height={24}>
+                  Email Adresi
+                </CustomTextFieldTitle>
+              </Box>
+              <Typography variant="body1" sx={{ fontFamily: "'Montserrat', sans-serif", color: '#555', ml: 4.5 }}>
+                {profileData.email}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Box display="flex" alignItems="center" gap={1.5} mb={1}>
+                <PhoneIcon sx={{ color: '#4085a3' }} />
+                <CustomTextFieldTitle height={24}>
+                  Telefon Numarası
+                </CustomTextFieldTitle>
+              </Box>
+              <Typography variant="body1" sx={{ fontFamily: "'Montserrat', sans-serif", color: '#555', ml: 4.5 }}>
+                {profileData.telefon}
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center" gap={1.5} mb={1}>
+                <InfoIcon sx={{ color: '#4085a3' }} />
+                <CustomTextFieldTitle height={24}>
+                  Hakkında
+                </CustomTextFieldTitle>
+              </Box>
+              <Typography variant="body1" sx={{ fontFamily: "'Montserrat', sans-serif", color: '#555', ml: 4.5 }}>
+                {profileData.aciklama || "Henüz bir açıklama girilmemiş."}
+              </Typography>
+            </Grid>
+
+          </Grid>
+
+
+
+          <Box mt={5} display="flex" justifyContent="flex-end">
             {isOwner ? (
               <Button
                 variant="contained"
-                color="primary"
+
                 startIcon={<EditIcon />}
                 onClick={handleEditClick}
+                sx={{
+                  backgroundColor: '#4085a3',
+                  color: '#fff',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  padding: '10px 24px',
+                  borderRadius: '12px',
+                  boxShadow: 'none',
+                  '&:hover': {
+                    backgroundColor: '#346b82',
+                    boxShadow: '0px 4px 12px rgba(64, 133, 163, 0.2)'
+                  }
+                }}
               >
                 Bilgilerimi Düzenle
               </Button>
             ) : (
-              <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+              <Typography variant="caption" color="text.secondary" sx={{ fontStyle: 'italic', fontFamily: "'Montserrat', sans-serif" }}>
                 Bu profili sadece sahibi düzenleyebilir.
               </Typography>
             )}
