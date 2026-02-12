@@ -34,16 +34,20 @@ function Dashboard() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
   const [debouncedSearchTerm,setDebouncedSearchTerm] = useState("");
+  const [gridApi,setGridApi] = useState(null);
 
   useEffect(() => {
     const timerId = setTimeout(() =>{
       setDebouncedSearchTerm(searchTerm);
-    },1500);
+      if(gridApi){
+        gridApi.paginationGoToFirstPage();
+      }
+    },500);
 
     return() =>{
       clearTimeout(timerId);
     };
-  },[searchTerm]);
+  },[searchTerm,gridApi]);
 
 
   const [formData, setFormData] = useState({
@@ -315,7 +319,9 @@ function Dashboard() {
           paginationPageSize={isMobile ? 12 : 20}
           paginationPageSizeSelector={[12, 20, 40, 100]}
           quickFilterText={debouncedSearchTerm}
+
           onGridReady={(params) => {
+            setGridApi(params.api);
             if (!isMobile) {
               params.api.sizeColumnsToFit();
             }
