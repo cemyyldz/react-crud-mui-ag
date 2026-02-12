@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { Drawer, Box, Typography, IconButton, Divider, TextField, FormControlLabel, Checkbox, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -6,7 +6,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CustomTextFieldTitle from './custom/CustomTextFieldTitle';
 import { toast } from 'react-toastify';
-import {CommonTextFieldSx} from './custom/CommonTextFieldSx';
+import { CommonTextFieldSx } from './custom/CommonTextFieldSx';
 
 
 
@@ -99,6 +99,12 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
   const [focusedFieldSurname, setFocusedFieldSurname] = useState(null);
   const isNameVisible = focusedFieldName === 'name' || !!formData.name;
   const isSurnameVisible = focusedFieldSurname === 'surname' || !!formData.surname;
+
+  useEffect(() => {
+    if (!open) {
+      setErrors({});
+    }
+  }, [open]);
 
 
   return (
@@ -214,12 +220,12 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
 
         <CustomTextFieldTitle>Telefon</CustomTextFieldTitle>
         <TextField name="phone" variant="outlined" size="small" value={formData.phone} onChange={handleInputChange}
-        placeholder={'05322359476'}
+          placeholder={'05322359476'}
           error={!!errors.phone} helperText={errors.phone} sx={CommonTextFieldSx} />
 
         <CustomTextFieldTitle>Açıklama</CustomTextFieldTitle>
         <TextField name="description" variant="outlined" size="small" value={formData.description} onChange={handleInputChange}
-        placeholder='Grizzle Techte çalışıyorum.'
+          placeholder='Grizzle Techte çalışıyorum.'
           error={!!errors.description} helperText={errors.description} sx={CommonTextFieldSx} multiline rows={3} />
 
 
@@ -259,7 +265,8 @@ const UserFormDrawer = ({ open, onClose, editId, formData, onChange, onSave }) =
             '&:hover': {
               borderColor: '#161d20',
               backgroundColor: 'rgba(22, 29, 32, 0.05)'
-            }
+            },
+
           }}>
             Vazgeç
           </Button>
