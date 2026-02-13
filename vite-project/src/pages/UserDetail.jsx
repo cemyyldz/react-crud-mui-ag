@@ -29,10 +29,8 @@ function UserDetail() {
 
   const getData = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 20));
       setLoading(true);
       const data = await fetchUserById(id);
-      console.log(data);
       setProfileData(data);
     } catch (error) {
       console.log("Kullanıcı detayı alınamadı:", error);
