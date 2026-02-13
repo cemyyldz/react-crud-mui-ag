@@ -13,7 +13,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useAuth } from "../context/AuthContext";
-import { fetchUserById, updateExistingUser } from "../api/userService";
+import { fetchUserById } from "../api/userService";
 import UserFormDrawer from "../components/UserFormDrawer";
 import CustomTextFieldTitle from '../components/custom/CustomTextFieldTitle';
 
@@ -26,16 +26,13 @@ function UserDetail() {
   const [loading, setLoading] = useState(true);
 
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "", surname: "", username: "", password: "",
-    email: "", phone: "", description: "", isActive: false
-  });
 
   const getData = async () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 20));
       setLoading(true);
       const data = await fetchUserById(id);
+      console.log(data);
       setProfileData(data);
     } catch (error) {
       console.log("Kullanıcı detayı alınamadı:", error);
@@ -51,50 +48,15 @@ function UserDetail() {
   }, [id]);
 
   const handleEditClick = () => {
-    setFormData({
-      name: profileData.isim,
-      surname: profileData.soyisim,
-      username: profileData.username,
-      password: profileData.password,
-      email: profileData.email,
-      phone: profileData.telefon,
-      description: profileData.aciklama,
-      isActive: profileData.isActive
-    });
+    
     setOpen(true);
   };
 
-
-  const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+  const handleSuccess = () => {
+    getData();
   };
 
 
-  const handleSave = async () => {
-    const apiPayload = {
-      isim: formData.name,
-      soyisim: formData.surname,
-      username: formData.username,
-      password: formData.password,
-      email: formData.email,
-      telefon: formData.phone,
-      aciklama: formData.description,
-      isActive: formData.isActive,
-    };
-
-    try {
-
-      await updateExistingUser(id, apiPayload);
-
-
-      setOpen(false);
-      getData();
-
-    } catch (error) {
-      console.log("Güncelleme hatası:", error);
-    }
-  };
   if (loading) {
     return null;
   }
@@ -145,11 +107,11 @@ function UserDetail() {
                 boxShadow: '0px 4px 12px rgba(22, 29, 32, 0.2)'
               }}
             >
-              {profileData.isim?.charAt(0).toUpperCase()}
+              {profileData.name?.charAt(0).toUpperCase()}
             </Avatar>
             <Box textAlign={{ xs: 'center', sm: 'left' }}>
               <Typography variant="h4" sx={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 700, color: '#161d20' }}>
-                {profileData.isim} {profileData.soyisim}
+                {profileData.name} {profileData.surname}
               </Typography>
               <Typography variant="h6" sx={{ fontFamily: "'Montserrat', sans-serif", fontWeight: 500, color: '#161d20' }}>
                 @{profileData.username}
@@ -198,7 +160,7 @@ function UserDetail() {
                 </CustomTextFieldTitle>
               </Box>
               <Typography variant="body1" sx={{ fontFamily: "'Montserrat', sans-serif", color: '#555', ml: 4.5 }}>
-                {profileData.telefon}
+                {profileData.phone}
               </Typography>
             </Grid>
 
@@ -210,7 +172,7 @@ function UserDetail() {
                 </CustomTextFieldTitle>
               </Box>
               <Typography variant="body1" sx={{ fontFamily: "'Montserrat', sans-serif", color: '#555', ml: 4.5 }}>
-                {profileData.aciklama || "Henüz bir açıklama girilmemiş."}
+                {profileData.description || "Henüz bir açıklama girilmemiş."}
               </Typography>
             </Grid>
 
@@ -255,9 +217,9 @@ function UserDetail() {
         open={open}
         onClose={() => setOpen(false)}
         editId={id}
-        formData={formData}
-        onChange={handleChange}
-        onSave={handleSave}
+        initialData={profileData}
+
+        onSuccess={handleSuccess}
       />
     </Container>
   );

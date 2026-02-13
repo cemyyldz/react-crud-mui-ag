@@ -11,15 +11,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 
-import { fetchUsers, deleteUserById, createNewUser, updateExistingUser } from '../api/userService';
+import { fetchUsers, deleteUserById } from '../api/userService';
 import UserFormDrawer from '../components/UserFormDrawer';
 import '../index.css'
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import WarningIcon from '@mui/icons-material/Warning';
 import { toast } from 'react-toastify';
-import { CommonTextFieldSx } from '../components/custom/CommonTextFieldSx';
 import CustomDialogTitle from '../components/custom/CustomDialogTitle';
+import {CommonTextFieldSx} from '../components/custom/CommonTextFieldSx';
 
 
 
@@ -33,33 +31,30 @@ function Dashboard() {
   const navigate = useNavigate();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [idToDelete, setIdToDelete] = useState(null);
-  const [debouncedSearchTerm,setDebouncedSearchTerm] = useState("");
-  const [gridApi,setGridApi] = useState(null);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [gridApi, setGridApi] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+
 
   useEffect(() => {
-    const timerId = setTimeout(() =>{
+    const timerId = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-      if(gridApi){
+      if (gridApi) {
         gridApi.paginationGoToFirstPage();
       }
-    },500);
+    }, 500);
 
-    return() =>{
+    return () => {
       clearTimeout(timerId);
     };
-  },[searchTerm,gridApi]);
+  }, [searchTerm, gridApi]);
 
+  const handleAddClick = () => {
+    setEditId(null);      
+    setSelectedUser(null); 
+    setOpen(true);         
+  };
 
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    username: "",
-    password: "",
-    email: "",
-    phone: "",
-    description: "",
-    isActive: false
-  });
 
 
   const getUsers = async () => {
@@ -100,72 +95,9 @@ function Dashboard() {
     }
   };
 
-  const handleSave = async () => {
-    const apiPayload = {
-      isim: formData.name,
-      soyisim: formData.surname,
-      username: formData.username,
-      password: formData.password,
-      email: formData.email,
-      telefon: formData.phone,
-      aciklama: formData.description,
-      isActive: formData.isActive,
-    };
-
-    try {
-      if (editId) {
-        await updateExistingUser(editId, apiPayload);
-      } else {
-        await createNewUser(apiPayload);
-      }
-      getUsers();
-      handleCancel();
-    }
-    catch (error) {
-      console.log("Kayıt oluşturulurken bir hata oluştu.", error);
-      throw error;
-    }
-  };
-
-
-  const toggleDrawer = async (newOpen) => {
-    setOpen(newOpen);
-    if (!newOpen) {
-      handleCancel();
-    }
-
-  };
-
-
-  const handleCancel = () => {
-    setEditId(null);
-    setFormData({ name: "", surname: "", username: "", password: "", email: "", phone: "", description: "", isActive: false });
-    setOpen(false);
-  };
-
-  const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-
-    setFormData({
-      ...formData,
-      [e.target.name]: value
-    });
-
-  };
-
-
   const handleEdit = (row) => {
 
-    setFormData({
-      name: row.name,
-      surname: row.surname,
-      username: row.username,
-      password: row.password,
-      email: row.email,
-      phone: row.phone,
-      description: row.description,
-      isActive: row.isActive
-    });
+    setSelectedUser(row);
 
     setEditId(row.id);
     setOpen(true);
@@ -174,7 +106,11 @@ function Dashboard() {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-  }
+  };
+
+  const handleSuccess = () => {
+    getUsers(); 
+  };
 
 
 
@@ -273,7 +209,7 @@ function Dashboard() {
         alignItems: { sm: "center" },
         justifyContent: { sm: "space-between" },
       }}>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)}
+        <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddClick}
           sx={{
             width: {
               xs: "100%", sm: "auto",
@@ -338,12 +274,10 @@ function Dashboard() {
 
       <UserFormDrawer
         open={open}
-        onClose={() => toggleDrawer(false)}
+        onClose={() => setOpen(false)}
         editId={editId}
-        formData={formData}
-
-        onChange={handleChange}
-        onSave={handleSave}
+        initialData={selectedUser} 
+        onSuccess={handleSuccess}
       />
 
       <CustomDialogTitle

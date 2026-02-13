@@ -39,5 +39,16 @@ export const loginUserApi = async(credentials) => {
 */
 export const fetchUserById = async (id) => {
   const response = await axios.get(`${API_URL}/${id}`);
-  return response.data;
+  const user = response.data;
+  return {
+    id: user.id,
+    name: user.isim,       
+    surname: user.soyisim,
+    phone: user.telefon,
+    description: user.aciklama,
+    email: user.email,
+    isActive: user.isActive,
+    username: user.username,
+    password: user.password,
+  };
 };
